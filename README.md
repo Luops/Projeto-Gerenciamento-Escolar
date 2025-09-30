@@ -1,4 +1,3 @@
-# Projeto-Gerenciamento-Escolar
 # 📚 Sistema Escolar
 
 Projeto para gerenciamento de alunos, turmas, professores e boletins.  
