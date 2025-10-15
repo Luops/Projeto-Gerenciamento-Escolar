@@ -1,6 +1,23 @@
 package dev.ellyon.SistemaEscolar.core.entities;
 
-import java.time.LocalDateTime;
 
-public record Coordenador(Long id, LocalDateTime createdAt, LocalDateTime updatedAt, String nome, String sobrenome) {
-}
+public final class Coordenador extends Entity{
+    private String nome;
+    private String sobrenome;
+
+    public String getNome() {
+        return this.nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getSobrenome() {
+        return this.sobrenome;
+    }
+
+    public void setSobrenome(String sobrenome) {
+        this.sobrenome = sobrenome;
+    }
+    }
