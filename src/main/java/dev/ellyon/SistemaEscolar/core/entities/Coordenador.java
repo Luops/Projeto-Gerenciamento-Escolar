@@ -1,7 +1,7 @@
 package dev.ellyon.SistemaEscolar.core.entities;
 
 
-public final class Coordenador extends Entity{
+public final class Coordenador extends Entidade{
     private String nome;
     private String sobrenome;
 

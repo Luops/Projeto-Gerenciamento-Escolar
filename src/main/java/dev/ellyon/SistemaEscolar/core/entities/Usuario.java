@@ -1,6 +1,6 @@
 package dev.ellyon.SistemaEscolar.core.entities;
 
-public final class Usuario extends Entity {
+public final class Usuario extends Entidade {
     private String email;
     private String senha;
     private Long entidadeId;

@@ -1,11 +1,11 @@
 package dev.ellyon.SistemaEscolar.core.entities;
 
-public final class Nota extends Entity{
+public final class Nota extends Entidade{
     private Aluno aluno;
     private String materia;
     private Double pontuacao;
     private boolean aprovado;
-    
+
     public Aluno getAluno() {
         return this.aluno;
     }

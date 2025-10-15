@@ -1,6 +1,6 @@
 package dev.ellyon.SistemaEscolar.core.entities;
 
-public final class Turma extends Entity {
+public final class Turma extends Entidade {
     private String numero;
     private int qteAlunos;
     private String ano;

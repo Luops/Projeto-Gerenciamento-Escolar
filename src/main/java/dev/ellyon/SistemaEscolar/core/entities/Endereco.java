@@ -1,6 +1,6 @@
 package dev.ellyon.SistemaEscolar.core.entities;
 
-public final class Endereco extends Entity{
+public final class Endereco extends Entidade{
     private String rua;
     private String numero;
     private String complemento;

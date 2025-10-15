@@ -2,7 +2,7 @@ package dev.ellyon.SistemaEscolar.core.entities;
 
 import java.util.List;
 
-public final class Professor extends Entity {
+public final class Professor extends Entidade {
     private String nome;
     private String sobrenome;
     private List<String> materias;

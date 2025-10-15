@@ -1,6 +1,6 @@
 package dev.ellyon.SistemaEscolar.core.entities;
 
-public final class Telefone extends Entity{
+public final class Telefone extends Entidade{
     private String numero;
 
     public String getNumero() {
