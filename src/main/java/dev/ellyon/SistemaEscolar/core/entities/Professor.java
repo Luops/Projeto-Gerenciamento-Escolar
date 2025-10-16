@@ -1,11 +1,13 @@
 package dev.ellyon.SistemaEscolar.core.entities;
 
+import dev.ellyon.SistemaEscolar.core.entities.enums.MateriaEnum;
+
 import java.util.List;
 
 public final class Professor extends Entidade {
     private String nome;
     private String sobrenome;
-    private List<String> materias;
+    private List<MateriaEnum> materias;
     private int totalAlunos;
     private List<Turma> turmas;
 
@@ -25,11 +27,11 @@ public final class Professor extends Entidade {
         this.sobrenome = sobrenome;
     }
 
-    public List<String> getMaterias() {
+    public List<MateriaEnum> getMaterias() {
         return this.materias;
     }
 
-    public void setMaterias(List<String> materias) {
+    public void setMaterias(List<MateriaEnum> materias) {
         this.materias = materias;
     }
 
@@ -48,5 +50,8 @@ public final class Professor extends Entidade {
     public void setTurmas(List<Turma> turmas) {
         this.turmas = turmas;
     }
+
+    /*
+     * Ajustes: atributo materias, getMaterias e setMaterias estavam como String e não como MateriaEnum - 15/10/2025 Fabrício */
 
 }

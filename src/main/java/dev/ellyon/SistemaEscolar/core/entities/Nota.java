@@ -1,9 +1,12 @@
 package dev.ellyon.SistemaEscolar.core.entities;
 
+import dev.ellyon.SistemaEscolar.core.entities.enums.MateriaEnum;
+
 public final class Nota extends Entidade{
     private Aluno aluno;
-    private String materia;
+    private MateriaEnum materia;
     private Double pontuacao;
+    private Double media;
     private boolean aprovado;
 
     public Aluno getAluno() {
@@ -14,11 +17,11 @@ public final class Nota extends Entidade{
         this.aluno = aluno;
     }
 
-    public String getMateria() {
-        return this.materia;
+    public MateriaEnum getMateria() {
+        return materia;
     }
 
-    public void setMateria(String materia) {
+    public void setMateria(MateriaEnum materia) {
         this.materia = materia;
     }
 
@@ -32,14 +35,12 @@ public final class Nota extends Entidade{
 
     public boolean isAprovado() {
         return this.aprovado;
+        // Comparar se a pontuação é maior ou igual a 7.0
     }
 
-    public boolean getAprovado() {
-        return this.aprovado;
-    }
-
-    public void setAprovado(boolean aprovado) {
-        this.aprovado = aprovado;
-    }
+    /*
+    * Ajustes: atributo materia, getMateria e setMateria estavam como String e não como MateriaEnum - 15/10/2025 Fabrício
+    * Foi retirado o getAprovado que estava duplicado, e setAprovado por não fazer sentido - 15/10/2025 Fabrício
+    * Foi inserido o atributo media - 15/10/2025 Fabrício*/
 
 }

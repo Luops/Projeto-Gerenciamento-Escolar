@@ -25,14 +25,11 @@ public final class Boletim extends Entidade{
 
     public boolean isAprovado() {
         return this.aprovado;
+        // Comparar se todas as notas são aprovadas.
+        // Se todas estão aprovadas, retorna true
     }
 
-    public boolean getAprovado() {
-        return this.aprovado;
-    }
-
-    public void setAprovado(boolean aprovado) {
-        this.aprovado = aprovado;
-    }
-
+    /*
+    * Ajustes: Foi retirado o getAprovado que estava duplicado, e setAprovado por não fazer sentido - 15/10/2025 Fabrício
+    * */
 }

@@ -1,10 +1,12 @@
 package dev.ellyon.SistemaEscolar.core.entities;
 
+import dev.ellyon.SistemaEscolar.core.entities.enums.RoleEnum;
+
 public final class Usuario extends Entidade {
     private String email;
     private String senha;
     private Long entidadeId;
-    private String role;
+    private RoleEnum role;
 
     public String getEmail() {
         return this.email;
@@ -30,12 +32,15 @@ public final class Usuario extends Entidade {
         this.entidadeId = entidadeId;
     }
 
-    public String getRole() {
+    public RoleEnum getRole() {
         return this.role;
     }
 
-    public void setRole(String role) {
+    public void setRole(RoleEnum role) {
         this.role = role;
     }
+
+    /*
+     * Ajustes: atributo role, getRole e setRole estavam como String e não como RoleEnum - 15/10/2025 Fabrício */
 
 }
