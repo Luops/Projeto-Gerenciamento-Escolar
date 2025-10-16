@@ -1,4 +1,4 @@
-package dev.ellyon.SistemaEscolar.core.entities.enums;
+package dev.ellyon.SistemaEscolar.core.enums;
 
 public enum MateriaEnum {
   PORTUGUES,

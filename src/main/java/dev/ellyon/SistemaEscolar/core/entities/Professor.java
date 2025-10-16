@@ -1,6 +1,6 @@
 package dev.ellyon.SistemaEscolar.core.entities;
 
-import dev.ellyon.SistemaEscolar.core.entities.enums.MateriaEnum;
+import dev.ellyon.SistemaEscolar.core.enums.MateriaEnum;
 
 import java.util.List;
 

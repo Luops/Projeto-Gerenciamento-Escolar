@@ -1,6 +1,6 @@
 package dev.ellyon.SistemaEscolar.core.entities;
 
-import dev.ellyon.SistemaEscolar.core.entities.enums.RoleEnum;
+import dev.ellyon.SistemaEscolar.core.enums.RoleEnum;
 
 public final class Usuario extends Entidade {
     private String email;
