@@ -23,10 +23,16 @@ public final class Boletim extends Entidade{
         this.notas = notas;
     }
 
+    /**  Comparar se todas as notas são aprovadas.  Se todas estão aprovadas, retorna true */
     public boolean isAprovado() {
+        boolean resultado = this.notas.stream().noneMatch(nota -> nota.isAprovado() == false);
+        if(resultado){
+            this.aprovado = true;
+        }
+        else{
+            this.aprovado = false;
+        }
         return this.aprovado;
-        // Comparar se todas as notas são aprovadas.
-        // Se todas estão aprovadas, retorna true
     }
 
     /*
