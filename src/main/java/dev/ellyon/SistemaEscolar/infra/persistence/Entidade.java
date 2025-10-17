@@ -1,14 +1,15 @@
-package dev.ellyon.SistemaEscolar.core.entities;
+package dev.ellyon.SistemaEscolar.infra.persistence;
+
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
-/**
- * Classe principal que herdará todas as entidades do sistema.
- */
+@Entity
 public abstract class Entidade {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDateTime criadoEm;
     private LocalDateTime atualizadoEm;
-
 
 }

@@ -1,5 +1,10 @@
 package dev.ellyon.SistemaEscolar.core.usecase;
 
-public class CriarCoordenadorUseCaseImpl implements CriarCoordenadorUseCase{
+import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
 
+public class CriarCoordenadorUseCaseImpl implements CriarCoordenadorUseCase{
+    @Override
+    public Coordenador execute(Coordenador coordenador) {
+        return null;
+    }
 }
