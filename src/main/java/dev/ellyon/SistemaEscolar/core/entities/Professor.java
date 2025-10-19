@@ -8,7 +8,7 @@ public final class Professor extends Entidade {
     private String nome;
     private String sobrenome;
     private List<MateriaEnum> materias;
-    private int totalAlunos;
+    private Integer totalAlunos;
     private List<Turma> turmas;
 
     public String getNome() {

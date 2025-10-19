@@ -7,11 +7,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "tb_coordenadores")
+@Table(name = "coordenador")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class CoordenadorEntity extends Entidade{
+public class CoordenadorEntity extends UsuarioEntity{
     private String nome;
     private String sobrenome;
 }

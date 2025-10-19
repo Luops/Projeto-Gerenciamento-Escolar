@@ -4,7 +4,7 @@ package dev.ellyon.SistemaEscolar.core.entities;
 public final class Coordenador extends Entidade{
     private String nome;
     private String sobrenome;
-
+    /*
     public String getNome() {
         return this.nome;
     }
@@ -19,5 +19,5 @@ public final class Coordenador extends Entidade{
 
     public void setSobrenome(String sobrenome) {
         this.sobrenome = sobrenome;
-    }
+    }*/
     }
