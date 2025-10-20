@@ -2,11 +2,25 @@ package dev.ellyon.SistemaEscolar.core.entities;
 
 import dev.ellyon.SistemaEscolar.core.enums.RoleEnum;
 
-public final class Usuario extends Entidade {
+import java.time.LocalDateTime;
+
+public class Usuario extends Entidade {
     private String email;
     private String senha;
     private Long entidadeId;
     private RoleEnum role;
+
+    public Usuario(Long id, LocalDateTime criadoEm, LocalDateTime atualizadoEm, String email, String senha, Long entidadeId, RoleEnum role) {
+        super(id, criadoEm, atualizadoEm);
+        this.email = email;
+        this.senha = senha;
+        this.entidadeId = entidadeId;
+        this.role = role;
+    }
+
+    public Usuario(){
+        super();
+    }
 
     public String getEmail() {
         return this.email;

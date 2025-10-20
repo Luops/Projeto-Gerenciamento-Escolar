@@ -2,7 +2,7 @@ package dev.ellyon.SistemaEscolar.core.entities;
 
 import java.util.List;
 
-public final class Boletim extends Entidade{
+public class Boletim extends Entidade{
     private Aluno aluno;
     private List<Nota> notas;
     private boolean aprovado;

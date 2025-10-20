@@ -15,7 +15,7 @@ CREATE TABLE Coordenador (
     sobrenome VARCHAR(255) NOT NULL,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    id_usuario INT,
+    id_usuario INT UNIQUE NOT NULL,
 
     CONSTRAINT fk_usuario_coordenador
         FOREIGN KEY (id_usuario)

@@ -2,7 +2,7 @@ package dev.ellyon.SistemaEscolar.core.entities;
 
 import dev.ellyon.SistemaEscolar.core.enums.MateriaEnum;
 
-public final class Nota extends Entidade {
+public class Nota extends Entidade {
     private Aluno aluno;
     private MateriaEnum materia;
     private Double pontuacao;

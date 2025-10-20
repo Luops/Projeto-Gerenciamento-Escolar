@@ -2,7 +2,7 @@ package dev.ellyon.SistemaEscolar.core.entities;
 
 import java.util.List;
 
-public final class Responsavel extends Entidade {
+public class Responsavel extends Entidade {
     private String nome;
     private String sobrenome;
     private List<Telefone> telefones;

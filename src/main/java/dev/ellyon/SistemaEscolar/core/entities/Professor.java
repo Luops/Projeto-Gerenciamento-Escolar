@@ -4,7 +4,7 @@ import dev.ellyon.SistemaEscolar.core.enums.MateriaEnum;
 
 import java.util.List;
 
-public final class Professor extends Entidade {
+public class Professor extends Entidade {
     private String nome;
     private String sobrenome;
     private List<MateriaEnum> materias;
