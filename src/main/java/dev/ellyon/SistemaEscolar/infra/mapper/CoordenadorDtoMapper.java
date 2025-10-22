@@ -10,10 +10,6 @@ public class CoordenadorDtoMapper {
         return new CoordenadorDto(
             coordenador.getId(),
             coordenador.getNome(),
-            coordenador.getEmail(),
-            coordenador.getSenha(),
-            coordenador.getEntidadeId(),
-            coordenador.getRole(),
             coordenador.getCriadoEm(),
             coordenador.getAtualizadoEm(),
             coordenador.getSobrenome()
@@ -24,10 +20,6 @@ public class CoordenadorDtoMapper {
         return new Coordenador(
             coordenadorDto.getId(),
             coordenadorDto.getNome(),
-            coordenadorDto.getEmail(),
-            coordenadorDto.getSenha(),
-            coordenadorDto.getEntidadeId(),
-            coordenadorDto.getRole(),
             coordenadorDto.getCriadoEm(),
             coordenadorDto.getAtualizadoEm(),
             coordenadorDto.getSobrenome()

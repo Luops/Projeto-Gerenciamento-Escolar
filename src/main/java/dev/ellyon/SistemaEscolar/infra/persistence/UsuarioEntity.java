@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "usuario")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,10 +25,10 @@ public class UsuarioEntity extends Entidade{
 
     public UsuarioEntity(Long id, String email, String senha, Long entidadeId, RoleEnum role, LocalDateTime criadoEm, LocalDateTime atualizadoEm) {
         super(id, criadoEm, atualizadoEm);
-        this.email = this.email;
-        this.senha = this.senha;
-        this.entidadeId = this.entidadeId;
-        this.role = this.role;
+        this.email = email;
+        this.senha = senha;
+        this.entidadeId = entidadeId;
+        this.role = role;
     }
 
     public UsuarioEntity() {

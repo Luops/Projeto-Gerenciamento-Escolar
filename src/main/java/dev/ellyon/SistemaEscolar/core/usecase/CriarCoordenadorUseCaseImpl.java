@@ -11,6 +11,6 @@ public class CriarCoordenadorUseCaseImpl implements CriarCoordenadorUseCase{
 
     @Override
     public Coordenador execute(Coordenador coordenador) {
-        return null;
+        return coordenadorGateway.criarCoordenador(coordenador);
     }
 }

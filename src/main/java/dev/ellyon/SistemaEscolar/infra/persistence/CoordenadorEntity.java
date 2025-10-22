@@ -1,8 +1,7 @@
 package dev.ellyon.SistemaEscolar.infra.persistence;
 
 import dev.ellyon.SistemaEscolar.core.enums.RoleEnum;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,12 +13,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class CoordenadorEntity extends UsuarioEntity{
+public class CoordenadorEntity extends Entidade{
     private String nome;
     private String sobrenome;
 
-    public CoordenadorEntity(Long id, String nome, String email, String senha, Long entidadeId, RoleEnum role, LocalDateTime criadoEm, LocalDateTime atualizadoEm, String sobrenome) {
-        super(id, email, senha, entidadeId, role, criadoEm, atualizadoEm);
+    public CoordenadorEntity(Long id, String nome, LocalDateTime criadoEm, LocalDateTime atualizadoEm, String sobrenome) {
+        super(id, criadoEm, atualizadoEm);
         this.nome = nome;
         this.sobrenome = sobrenome;
     }

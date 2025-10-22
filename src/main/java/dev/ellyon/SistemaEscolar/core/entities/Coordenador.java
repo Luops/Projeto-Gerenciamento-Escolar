@@ -5,12 +5,12 @@ import dev.ellyon.SistemaEscolar.core.enums.RoleEnum;
 
 import java.time.LocalDateTime;
 
-public class Coordenador extends Usuario{
+public class Coordenador extends Entidade{
     private String nome;
     private String sobrenome;
 
-    public Coordenador(Long id, String nome, String email, String senha, Long entidadeId, RoleEnum role, LocalDateTime criadoEm, LocalDateTime atualizadoEm, String sobrenome) {
-        super(id, criadoEm, atualizadoEm, email, senha, entidadeId, role);
+    public Coordenador(Long id, String nome, LocalDateTime criadoEm, LocalDateTime atualizadoEm, String sobrenome) {
+        super(id, criadoEm, atualizadoEm);
         this.nome = nome;
         this.sobrenome = sobrenome;
     }
