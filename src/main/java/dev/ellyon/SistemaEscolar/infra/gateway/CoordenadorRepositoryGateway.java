@@ -15,7 +15,7 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
 
     public CoordenadorRepositoryGateway(CoordenadorRepository coordenadorRepository, CoordenadorEntityMapper coordenadorEntityMapper) {
         this.coordenadorRepository = coordenadorRepository;
-        this.coordenadorEntityMapper = new CoordenadorEntityMapper();
+        this.coordenadorEntityMapper =  coordenadorEntityMapper;
     }
 
     @Override

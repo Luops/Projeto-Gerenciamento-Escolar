@@ -23,10 +23,6 @@ public class CoordenadorEntity extends Entidade{
         this.sobrenome = sobrenome;
     }
 
-    public CoordenadorEntity() {
-        super();
-    }
-
     public String getNome() {
         return nome;
     }

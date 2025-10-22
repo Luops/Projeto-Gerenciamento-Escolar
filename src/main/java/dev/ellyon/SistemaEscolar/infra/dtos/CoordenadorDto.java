@@ -7,6 +7,6 @@ import java.time.LocalDateTime;
 
 public class CoordenadorDto extends Coordenador {
     public CoordenadorDto(Long id, String nome, LocalDateTime criadoEm, LocalDateTime atualizadoEm, String sobrenome) {
-        super();
+        super(id, nome, criadoEm, atualizadoEm, sobrenome);
     }
 }
