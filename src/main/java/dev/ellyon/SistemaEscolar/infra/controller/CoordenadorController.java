@@ -18,6 +18,7 @@ public class CoordenadorController {
         this.coordenadorDtoMapper = coordenadorDtoMapper;
     }
 
+    // Endpoint para criar um novo coordenador
     @PostMapping("criar")
     public CoordenadorDto criarCoordenador(@RequestBody CoordenadorDto coordenadorDto) {
         // Executa o caso de uso para criar um novo coordenador. Pega o DTO, converte para domínio e passa para o caso de uso pois ele recebe somente a entidade de domínio
@@ -25,6 +26,7 @@ public class CoordenadorController {
         return coordenadorDtoMapper.toDto(novoCoordenador); // Converte o coordenador criado de volta para DTO
     }
 
+    // Endpoint para listar coordenadores
     @GetMapping("listar")
     public String listarCoordenadores() {
         return "Listando coordenadores...";

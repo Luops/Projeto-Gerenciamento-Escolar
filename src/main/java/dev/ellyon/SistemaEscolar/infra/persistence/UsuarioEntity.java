@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "usuario")
 @NoArgsConstructor
@@ -19,4 +21,48 @@ public class UsuarioEntity extends Entidade{
     private Long entidadeId;
     @Enumerated(EnumType.STRING)
     private RoleEnum role;
+
+    public UsuarioEntity(Long id, String email, String senha, Long entidadeId, RoleEnum role, LocalDateTime criadoEm, LocalDateTime atualizadoEm) {
+        super(id, criadoEm, atualizadoEm);
+        this.email = this.email;
+        this.senha = this.senha;
+        this.entidadeId = this.entidadeId;
+        this.role = this.role;
+    }
+
+    public UsuarioEntity() {
+        super();
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public Long getEntidadeId() {
+        return entidadeId;
+    }
+
+    public void setEntidadeId(Long entidadeId) {
+        this.entidadeId = entidadeId;
+    }
+
+    public RoleEnum getRole() {
+        return role;
+    }
+
+    public void setRole(RoleEnum role) {
+        this.role = role;
+    }
 }
