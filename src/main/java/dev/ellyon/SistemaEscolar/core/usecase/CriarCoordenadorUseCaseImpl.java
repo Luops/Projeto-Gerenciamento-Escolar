@@ -10,7 +10,7 @@ public class CriarCoordenadorUseCaseImpl implements CriarCoordenadorUseCase{
     }
 
     @Override
-    public Coordenador execute(Coordenador coordenador) {
-        return coordenadorGateway.criarCoordenador(coordenador);
+    public Coordenador execute(Coordenador coordenador, String email, String senha, Long entidadeId) {
+        return coordenadorGateway.criarCoordenador(coordenador, email, senha, entidadeId);
     }
 }

@@ -14,25 +14,42 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class UsuarioEntity extends Entidade{
-    private String email;
-    private String senha;
+public class UsuarioEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_usuario")
+    private Long idUsuario;
+    private String email;
+    private String senha;
+    @Column(name = "entidade_id")
     private Long entidadeId;
     @Enumerated(EnumType.STRING)
     private RoleEnum role;
+    @Column(name = "criado_em")
+    private LocalDateTime criadoEm;
+    @Column(name = "atualizado_em")
+    private LocalDateTime atualizadoEm;
 
-    public UsuarioEntity(Long id, String email, String senha, Long entidadeId, RoleEnum role, LocalDateTime criadoEm, LocalDateTime atualizadoEm) {
-        super(id, criadoEm, atualizadoEm);
+    public UsuarioEntity(Long idUsuario, String email, String senha, Long entidadeId, RoleEnum role, LocalDateTime criadoEm, LocalDateTime atualizadoEm) {
+        this.idUsuario = idUsuario;
         this.email = email;
         this.senha = senha;
         this.entidadeId = entidadeId;
         this.role = role;
+        this.criadoEm = criadoEm;
+        this.atualizadoEm = atualizadoEm;
     }
 
     public UsuarioEntity() {
-        super();
+
+    }
+
+    public Long getId() {
+        return idUsuario;
+    }
+
+    public void setId(Long idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public String getEmail() {
@@ -65,5 +82,21 @@ public class UsuarioEntity extends Entidade{
 
     public void setRole(RoleEnum role) {
         this.role = role;
+    }
+
+    public LocalDateTime getCriadoEm() {
+        return criadoEm;
+    }
+
+    public void setCriadoEm(LocalDateTime criadoEm) {
+        this.criadoEm = criadoEm;
+    }
+
+    public LocalDateTime getAtualizadoEm() {
+        return atualizadoEm;
+    }
+
+    public void setAtualizadoEm(LocalDateTime atualizadoEm) {
+        this.atualizadoEm = atualizadoEm;
     }
 }

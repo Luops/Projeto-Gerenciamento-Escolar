@@ -22,8 +22,16 @@ public class CoordenadorController {
     @PostMapping("criar")
     public CoordenadorDto criarCoordenador(@RequestBody CoordenadorDto coordenadorDto) {
         // Executa o caso de uso para criar um novo coordenador. Pega o DTO, converte para domínio e passa para o caso de uso pois ele recebe somente a entidade de domínio
-        Coordenador novoCoordenador = criarCoordenadorUseCase.execute(coordenadorDtoMapper.toDomain(coordenadorDto));
-        return coordenadorDtoMapper.toDto(novoCoordenador); // Converte o coordenador criado de volta para DTO
+        Coordenador coordenadorDominio  = criarCoordenadorUseCase.execute(coordenadorDtoMapper.toDomain(coordenadorDto), coordenadorDto.getEmail(), coordenadorDto.getSenha(), coordenadorDto.getEntidadeId());
+        // Passa email e senha separadamente
+        Coordenador novoCoordenador = criarCoordenadorUseCase.execute(
+                coordenadorDominio,
+                coordenadorDto.getEmail(),
+                coordenadorDto.getSenha(),
+                coordenadorDto.getEntidadeId()
+        );
+
+        return coordenadorDtoMapper.toDto(novoCoordenador);// Converte o coordenador criado de volta para DTO
     }
 
     // Endpoint para listar coordenadores
