@@ -1,5 +1,6 @@
 package dev.ellyon.SistemaEscolar.infra.controller;
 
+
 import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
 import dev.ellyon.SistemaEscolar.core.usecase.CriarCoordenadorUseCase;
 import dev.ellyon.SistemaEscolar.infra.dtos.CoordenadorDto;
@@ -19,11 +20,17 @@ public class CoordenadorController {
     }
 
     // Endpoint para criar um novo coordenador
-    @PostMapping("criar")
+    /*@PostMapping("criar")
     public CoordenadorDto criarCoordenador(@RequestBody CoordenadorDto coordenadorDto) {
         // Executa o caso de uso para criar um novo coordenador. Pega o DTO, converte para domínio e passa para o caso de uso pois ele recebe somente a entidade de domínio
-        Coordenador coordenadorDominio  = criarCoordenadorUseCase.execute(coordenadorDtoMapper.toDomain(coordenadorDto), coordenadorDto.getEmail(), coordenadorDto.getSenha(), coordenadorDto.getEntidadeId());
-        // Passa email e senha separadamente
+        Coordenador novoCoordenador = criarCoordenadorUseCase.execute(coordenadorDtoMapper.toDomain(coordenadorDto));
+        return coordenadorDtoMapper.toDto(novoCoordenador); // Converte o coordenador criado de volta para DTO
+    }*/
+    @PostMapping("criar")
+    public CoordenadorDto criarCoordenador(@RequestBody CoordenadorDto coordenadorDto) {
+        Coordenador coordenadorDominio = coordenadorDtoMapper.toDomain(coordenadorDto);
+
+        // Executa o caso de uso para criar um novo coordenador. Pega o DTO, converte para domínio e passa para o caso de uso pois ele recebe somente a entidade de domínio
         Coordenador novoCoordenador = criarCoordenadorUseCase.execute(
                 coordenadorDominio,
                 coordenadorDto.getEmail(),
@@ -31,7 +38,17 @@ public class CoordenadorController {
                 coordenadorDto.getEntidadeId()
         );
 
-        return coordenadorDtoMapper.toDto(novoCoordenador);// Converte o coordenador criado de volta para DTO
+        // Criar resposta MANUALMENTE para incluir email e entidadeId (SEM senha)
+        CoordenadorDto resposta = new CoordenadorDto();
+        resposta.setId(novoCoordenador.getId());
+        resposta.setNome(novoCoordenador.getNome());
+        resposta.setSobrenome(novoCoordenador.getSobrenome());
+        resposta.setEmail(coordenadorDto.getEmail());
+        resposta.setEntidadeId(coordenadorDto.getEntidadeId());
+        resposta.setCriadoEm(novoCoordenador.getCriadoEm());
+        resposta.setAtualizadoEm(novoCoordenador.getAtualizadoEm());
+
+        return resposta;
     }
 
     // Endpoint para listar coordenadores

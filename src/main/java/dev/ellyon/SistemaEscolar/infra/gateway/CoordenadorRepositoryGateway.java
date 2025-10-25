@@ -12,24 +12,45 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-
+/*
 @Component
 public class CoordenadorRepositoryGateway implements CoordenadorGateway {
     // Injeção do repositório de coordenadores. Usar o JPA Repository para fazer operações no banco de dados.
     private final CoordenadorRepository coordenadorRepository; // Repositório de coordenadores. Pegar as queries do banco de dados.
+    private final CoordenadorEntityMapper coordenadorEntityMapper;
+
+    public CoordenadorRepositoryGateway(CoordenadorRepository coordenadorRepository, CoordenadorEntityMapper coordenadorEntityMapper, UsuarioRepository usuarioRepository, UsuarioEntity usuarioEntity) {
+        this.coordenadorRepository = coordenadorRepository;
+        this.coordenadorEntityMapper = new CoordenadorEntityMapper();
+    }
+
+    @Override
+    public Coordenador criarCoordenador(Coordenador coordenador) {
+        CoordenadorEntity coordenadorEntity = coordenadorEntityMapper.toEntity(coordenador); // Converter a entidade de domínio para a entidade de persistência.
+        CoordenadorEntity novoCoordenador = coordenadorRepository.save(coordenadorEntity); // Salvar a entidade no banco de dados.
+        return coordenadorEntityMapper.toDomain(novoCoordenador); // Converter a entidade de persistência de volta para a entidade de domínio.
+    }
+}
+*/
+@Component
+public class CoordenadorRepositoryGateway implements CoordenadorGateway {
+    private final CoordenadorRepository coordenadorRepository;
     private final UsuarioRepository usuarioRepository;
     private final CoordenadorEntityMapper coordenadorEntityMapper;
 
-    public CoordenadorRepositoryGateway(CoordenadorRepository coordenadorRepository, CoordenadorEntityMapper coordenadorEntityMapper, UsuarioRepository usuarioRepository) {
+    public CoordenadorRepositoryGateway(
+            CoordenadorRepository coordenadorRepository,
+            UsuarioRepository usuarioRepository,
+            CoordenadorEntityMapper coordenadorEntityMapper) {
         this.coordenadorRepository = coordenadorRepository;
-        this.coordenadorEntityMapper =  coordenadorEntityMapper;
         this.usuarioRepository = usuarioRepository;
+        this.coordenadorEntityMapper = coordenadorEntityMapper;
     }
 
-    @Transactional
     @Override
+    @Transactional
     public Coordenador criarCoordenador(Coordenador coordenador, String email, String senha, Long entidadeId) {
-        // 1. Criar o usuário
+        // 1. Criar o Usuario primeiro
         UsuarioEntity usuario = new UsuarioEntity();
         usuario.setEmail(email);
         usuario.setSenha(senha);
@@ -40,9 +61,11 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
 
         UsuarioEntity usuarioSalvo = usuarioRepository.save(usuario);
 
-        // 2. Criar o coordenador
-        CoordenadorEntity coordenadorEntity = coordenadorEntityMapper.toEntity(coordenador);
-        coordenadorEntity.setId(usuarioSalvo.getId());
+        // 2. Criar o Coordenador vinculado ao Usuario
+        CoordenadorEntity coordenadorEntity = new CoordenadorEntity();
+        coordenadorEntity.setNome(coordenador.getNome());
+        coordenadorEntity.setSobrenome(coordenador.getSobrenome());
+        coordenadorEntity.setIdUsuario(usuarioSalvo.getIdUsuario());
         coordenadorEntity.setCriadoEm(LocalDateTime.now());
         coordenadorEntity.setAtualizadoEm(LocalDateTime.now());
 

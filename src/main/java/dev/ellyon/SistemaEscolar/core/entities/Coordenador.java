@@ -16,21 +16,23 @@ public class Coordenador extends Entidade{
     }
 
     public Coordenador(){
+        super();
+    }
+
+    public String getNome() {
+        return this.nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public String getSobrenome() {
-        return sobrenome;
+        return this.sobrenome;
     }
 
     public void setSobrenome(String sobrenome) {
         this.sobrenome = sobrenome;
     }
 
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
 }

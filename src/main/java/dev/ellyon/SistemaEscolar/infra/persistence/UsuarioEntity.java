@@ -11,19 +11,20 @@ import java.time.LocalDateTime;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "usuario")
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
 public class UsuarioEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario")
     private Long idUsuario;
+    @Column(name = "email")
     private String email;
+    @Column(name = "senha")
     private String senha;
     @Column(name = "entidade_id")
     private Long entidadeId;
     @Enumerated(EnumType.STRING)
+    @Column(name = "role")
     private RoleEnum role;
     @Column(name = "criado_em")
     private LocalDateTime criadoEm;
@@ -41,14 +42,13 @@ public class UsuarioEntity{
     }
 
     public UsuarioEntity() {
-
     }
 
-    public Long getId() {
+    public Long getIdUsuario() {
         return idUsuario;
     }
 
-    public void setId(Long idUsuario) {
+    public void setIdUsuario(Long idUsuario) {
         this.idUsuario = idUsuario;
     }
 

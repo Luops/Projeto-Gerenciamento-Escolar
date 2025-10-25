@@ -1,6 +1,5 @@
 package dev.ellyon.SistemaEscolar.infra.persistence;
 
-import dev.ellyon.SistemaEscolar.core.enums.RoleEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,16 +9,16 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "coordenador")
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
 public class CoordenadorEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_coordenador")
     private Long idCoordenador;
 
+    @Column(name = "nome")
     private String nome;
+
+    @Column(name = "sobrenome")
     private String sobrenome;
 
     @Column(name = "id_usuario")
@@ -32,7 +31,7 @@ public class CoordenadorEntity{
     private LocalDateTime atualizadoEm;
 
     // Opcional: relacionamento JPA
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", insertable = false, updatable = false)
     private UsuarioEntity usuario;
 
@@ -46,14 +45,15 @@ public class CoordenadorEntity{
         this.usuario = usuario;
     }
 
-    public CoordenadorEntity(Long id, String nome, LocalDateTime criadoEm, LocalDateTime atualizadoEm, String sobrenome) {
+    public CoordenadorEntity() {
+
     }
 
-    public Long getId() {
+    public Long getIdCoordenador() {
         return idCoordenador;
     }
 
-    public void setId(Long idCoordenador) {
+    public void setIdCoordenador(Long idCoordenador) {
         this.idCoordenador = idCoordenador;
     }
 
@@ -71,6 +71,14 @@ public class CoordenadorEntity{
 
     public void setSobrenome(String sobrenome) {
         this.sobrenome = sobrenome;
+    }
+
+    public Long getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public LocalDateTime getCriadoEm() {

@@ -3,7 +3,7 @@ package dev.ellyon.SistemaEscolar.infra.mapper;
 import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
 import dev.ellyon.SistemaEscolar.infra.persistence.CoordenadorEntity;
 import org.springframework.stereotype.Component;
-
+/*
 @Component
 public class CoordenadorEntityMapper {
     public CoordenadorEntity toEntity(Coordenador coordenador){
@@ -18,11 +18,35 @@ public class CoordenadorEntityMapper {
 
     public Coordenador toDomain(CoordenadorEntity coordenadorEntity){
         return new Coordenador(
-                coordenadorEntity.getId(),
+                coordenadorEntity.getIdCoordenador(),
                 coordenadorEntity.getNome(),
                 coordenadorEntity.getCriadoEm(),
                 coordenadorEntity.getAtualizadoEm(),
                 coordenadorEntity.getSobrenome()
+        );
+    }
+}*/
+@Component
+public class CoordenadorEntityMapper {
+
+    public CoordenadorEntity toEntity(Coordenador coordenador) {
+        CoordenadorEntity entity = new CoordenadorEntity();
+        entity.setIdCoordenador(coordenador.getId());
+        entity.setNome(coordenador.getNome());
+        entity.setSobrenome(coordenador.getSobrenome());
+        entity.setCriadoEm(coordenador.getCriadoEm());
+        entity.setAtualizadoEm(coordenador.getAtualizadoEm());
+        return entity;
+    }
+
+    public Coordenador toDomain(CoordenadorEntity entity) {
+        // ✅ Aqui você precisa usar o construtor de Coordenador do domínio
+        return new Coordenador(
+                entity.getIdCoordenador(),
+                entity.getNome(),
+                entity.getCriadoEm(),
+                entity.getAtualizadoEm(),
+                entity.getSobrenome()
         );
     }
 }
