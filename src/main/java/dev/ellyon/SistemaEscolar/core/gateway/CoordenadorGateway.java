@@ -2,6 +2,8 @@ package dev.ellyon.SistemaEscolar.core.gateway;
 
 import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
 import jakarta.transaction.Transactional;
+
+import java.util.List;
 /*
 public interface CoordenadorGateway {
     // Método para criar um coordenador
@@ -11,4 +13,5 @@ public interface CoordenadorGateway {
 
 public interface CoordenadorGateway {
     Coordenador criarCoordenador(Coordenador coordenador, String email, String senha, Long entidadeId);
+    List<Coordenador> buscarCoordenadores();
 }

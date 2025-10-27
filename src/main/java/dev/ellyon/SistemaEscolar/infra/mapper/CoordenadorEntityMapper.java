@@ -3,6 +3,14 @@ package dev.ellyon.SistemaEscolar.infra.mapper;
 import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
 import dev.ellyon.SistemaEscolar.infra.persistence.CoordenadorEntity;
 import org.springframework.stereotype.Component;
+
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.IntFunction;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
+import java.util.stream.Stream;
+
 /*
 @Component
 public class CoordenadorEntityMapper {
@@ -48,5 +56,11 @@ public class CoordenadorEntityMapper {
                 entity.getAtualizadoEm(),
                 entity.getSobrenome()
         );
+    }
+
+    public List<Coordenador> toDomainList(List<CoordenadorEntity> entities) {
+        return entities.stream()
+                .map(this::toDomain)
+                .toList();
     }
 }

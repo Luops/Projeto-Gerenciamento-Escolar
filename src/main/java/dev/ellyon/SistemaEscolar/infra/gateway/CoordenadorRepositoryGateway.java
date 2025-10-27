@@ -12,6 +12,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 /*
 @Component
 public class CoordenadorRepositoryGateway implements CoordenadorGateway {
@@ -37,6 +39,7 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
     private final CoordenadorRepository coordenadorRepository;
     private final UsuarioRepository usuarioRepository;
     private final CoordenadorEntityMapper coordenadorEntityMapper;
+
 
     public CoordenadorRepositoryGateway(
             CoordenadorRepository coordenadorRepository,
@@ -73,4 +76,11 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
 
         return coordenadorEntityMapper.toDomain(novoCoordenador);
     }
+
+    @Override
+    public List<Coordenador> buscarCoordenadores() {
+        List<CoordenadorEntity> coordenadorEntities = coordenadorRepository.findAll();
+        return coordenadorEntityMapper.toDomainList(coordenadorEntities);
+    }
+
 }

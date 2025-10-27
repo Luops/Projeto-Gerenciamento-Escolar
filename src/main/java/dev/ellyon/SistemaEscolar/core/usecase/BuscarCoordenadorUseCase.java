@@ -1,4 +1,9 @@
 package dev.ellyon.SistemaEscolar.core.usecase;
 
-public class BuscarCoordenadorUseCase {
+import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
+
+import java.util.List;
+
+public interface BuscarCoordenadorUseCase {
+    public List<Coordenador> execute();
 }

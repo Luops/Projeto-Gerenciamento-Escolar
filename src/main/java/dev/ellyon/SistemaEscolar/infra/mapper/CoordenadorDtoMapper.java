@@ -2,8 +2,11 @@ package dev.ellyon.SistemaEscolar.infra.mapper;
 
 import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
 import dev.ellyon.SistemaEscolar.infra.dtos.CoordenadorDto;
+import dev.ellyon.SistemaEscolar.infra.persistence.CoordenadorEntity;
 import dev.ellyon.SistemaEscolar.infra.persistence.UsuarioEntity;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 /*
 @Component
 public class CoordenadorDtoMapper {
@@ -30,6 +33,7 @@ public class CoordenadorDtoMapper {
 
 @Component
 public class CoordenadorDtoMapper {
+    // Resposta completa, incluindo dados do usuário (sem senha)
     public CoordenadorDto toDto(Coordenador coordenador, UsuarioEntity usuario){
         CoordenadorDto dto = new CoordenadorDto();
         dto.setId(coordenador.getId());
