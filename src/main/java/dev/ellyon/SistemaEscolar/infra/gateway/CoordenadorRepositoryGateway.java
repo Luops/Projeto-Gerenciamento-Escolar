@@ -40,7 +40,6 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
     private final UsuarioRepository usuarioRepository;
     private final CoordenadorEntityMapper coordenadorEntityMapper;
 
-
     public CoordenadorRepositoryGateway(
             CoordenadorRepository coordenadorRepository,
             UsuarioRepository usuarioRepository,
@@ -78,9 +77,8 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
     }
 
     @Override
-    public List<Coordenador> buscarCoordenadores() {
-        List<CoordenadorEntity> coordenadorEntities = coordenadorRepository.findAll();
-        return coordenadorEntityMapper.toDomainList(coordenadorEntities);
+    public List<Coordenador> buscarTodosCoordenadores() {
+        return coordenadorRepository.findAll().stream().map(coordenadorEntityMapper::toDomain).toList();
     }
 
 }

@@ -5,15 +5,15 @@ import dev.ellyon.SistemaEscolar.core.gateway.CoordenadorGateway;
 
 import java.util.List;
 
-public class BuscarCoordenadorUseCaseImpl implements BuscarCoordenadorUseCase{
+public class BuscarTodosCoordenadoresUseCaseImpl implements BuscarTodosCoordenadoresUseCase {
     private final CoordenadorGateway coordenadorGateway;
 
-    public BuscarCoordenadorUseCaseImpl(CoordenadorGateway coordenadorGateway) {
+    public BuscarTodosCoordenadoresUseCaseImpl(CoordenadorGateway coordenadorGateway) {
         this.coordenadorGateway = coordenadorGateway;
     }
 
     @Override
     public List<Coordenador> execute() {
-        return coordenadorGateway.buscarCoordenadores();
+        return coordenadorGateway.buscarTodosCoordenadores();
     }
 }

@@ -57,10 +57,4 @@ public class CoordenadorEntityMapper {
                 entity.getSobrenome()
         );
     }
-
-    public List<Coordenador> toDomainList(List<CoordenadorEntity> entities) {
-        return entities.stream()
-                .map(this::toDomain)
-                .toList();
-    }
 }

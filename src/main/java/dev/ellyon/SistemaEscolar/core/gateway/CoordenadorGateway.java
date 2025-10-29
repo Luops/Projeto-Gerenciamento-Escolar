@@ -13,5 +13,5 @@ public interface CoordenadorGateway {
 
 public interface CoordenadorGateway {
     Coordenador criarCoordenador(Coordenador coordenador, String email, String senha, Long entidadeId);
-    List<Coordenador> buscarCoordenadores();
+    List<Coordenador> buscarTodosCoordenadores();
 }
