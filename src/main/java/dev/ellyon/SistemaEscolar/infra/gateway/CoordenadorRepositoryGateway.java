@@ -81,4 +81,8 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
         return coordenadorRepository.findAll().stream().map(coordenadorEntityMapper::toDomain).toList();
     }
 
+    @Override
+    public boolean isCoordenadorExistentePorEmail(String email) {
+        return coordenadorRepository.findAll().stream().anyMatch(coordenador -> coordenador.getUsuario().getEmail().equalsIgnoreCase(email));
+    }
 }
