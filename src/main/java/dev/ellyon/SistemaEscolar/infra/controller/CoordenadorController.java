@@ -2,6 +2,7 @@ package dev.ellyon.SistemaEscolar.infra.controller;
 
 
 import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
+import dev.ellyon.SistemaEscolar.core.usecase.BuscarCoordenadoresPeloNomeUseCase;
 import dev.ellyon.SistemaEscolar.core.usecase.BuscarTodosCoordenadoresUseCase;
 import dev.ellyon.SistemaEscolar.core.usecase.CriarCoordenadorUseCase;
 import dev.ellyon.SistemaEscolar.infra.dtos.CoordenadorDto;
@@ -19,12 +20,16 @@ public class CoordenadorController {
     private final CriarCoordenadorUseCase criarCoordenadorUseCase; // Executar caso de uso de criar coordenador
     private final CoordenadorDtoMapper coordenadorDtoMapper; // Mapper para converter entre Coordenador e CoordenadorDto
     private final BuscarTodosCoordenadoresUseCase buscarCoordenadorUseCase;
+    private final BuscarCoordenadoresPeloNomeUseCase buscarCoordenadoresPeloNomeUseCase;
 
     // Constructor Injection
-    public CoordenadorController(CriarCoordenadorUseCase criarCoordenadorUseCase, CoordenadorDtoMapper coordenadorDtoMapper, BuscarTodosCoordenadoresUseCase buscarCoordenadorUseCase) {
+
+
+    public CoordenadorController(CriarCoordenadorUseCase criarCoordenadorUseCase, CoordenadorDtoMapper coordenadorDtoMapper, BuscarTodosCoordenadoresUseCase buscarCoordenadorUseCase, BuscarCoordenadoresPeloNomeUseCase buscarCoordenadoresPeloNomeUseCase) {
         this.criarCoordenadorUseCase = criarCoordenadorUseCase;
         this.coordenadorDtoMapper = coordenadorDtoMapper;
         this.buscarCoordenadorUseCase = buscarCoordenadorUseCase;
+        this.buscarCoordenadoresPeloNomeUseCase = buscarCoordenadoresPeloNomeUseCase;
     }
 
     // Endpoint para criar um novo coordenador
@@ -66,6 +71,15 @@ public class CoordenadorController {
     @GetMapping("buscartodos")
     public List<CoordenadorDto> buscarTodosCoordenadores() {
         List<Coordenador> coordenadores = buscarCoordenadorUseCase.execute();
+        return coordenadores.stream()
+                .map(coordenador -> coordenadorDtoMapper.toDto(coordenador, null)) // Converte cada coordenador para DTO sem incluir senha
+                .toList();
+    }
+
+    // Endpoint para listar coordenadores pelo nome
+    @GetMapping("buscarpelonome")
+    public List<CoordenadorDto> buscarCoordenadoresPeloNome(@RequestParam String nome) {
+        List<Coordenador> coordenadores = buscarCoordenadoresPeloNomeUseCase.execute(nome);
         return coordenadores.stream()
                 .map(coordenador -> coordenadorDtoMapper.toDto(coordenador, null)) // Converte cada coordenador para DTO sem incluir senha
                 .toList();

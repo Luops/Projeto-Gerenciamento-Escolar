@@ -14,5 +14,6 @@ public interface CoordenadorGateway {
 public interface CoordenadorGateway {
     Coordenador criarCoordenador(Coordenador coordenador, String email, String senha, Long entidadeId);
     List<Coordenador> buscarTodosCoordenadores();
+    List<Coordenador> buscarCoordenadoresPeloNome(String nome);
     boolean isCoordenadorExistentePorEmail(String email);
 }
