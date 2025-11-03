@@ -23,4 +23,14 @@ public class BeanConfig {
     public BuscarCoordenadoresPeloNomeUseCase buscarCoordenadoresPeloNomeUseCase(CoordenadorGateway coordenadorGateway) {
         return new BuscarCoordenadoresPeloNomeUseCaseImpl(coordenadorGateway);
     }
+
+    @Bean
+    public BuscarCoordenadoresEntreDatasUseCase buscarCoordenadoresPelaDataDeCadastroUseCase(CoordenadorGateway coordenadorGateway) {
+        return new BuscarCoordenadoresEntreDatasUseCaseImpl(coordenadorGateway);
+    }
+
+    @Bean
+    public BuscarCoordenadorPelaEntidadeIdUseCase buscarCoordenadorPelaEntidadeIdUseCase(CoordenadorGateway coordenadorGateway) {
+        return new BuscarCoordenadorPelaEntidadeIdUseCaseImpl(coordenadorGateway);
+    }
 }

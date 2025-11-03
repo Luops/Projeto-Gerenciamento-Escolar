@@ -90,4 +90,14 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
     public List<Coordenador> buscarCoordenadoresPeloNome(String nome) {
         return coordenadorRepository.findByNomeContainingIgnoreCase(nome).stream().map(coordenadorEntityMapper::toDomain).toList();
     }
+
+    @Override
+    public List<Coordenador> buscarCoordenadoresEntreDatas(LocalDateTime dataInicio, LocalDateTime dataFim) {
+        return coordenadorRepository.findByCriadoEmBetween(dataInicio, dataFim).stream().map(coordenadorEntityMapper::toDomain).toList();
+    }
+
+    @Override
+    public List<Coordenador> buscarCoordenadoresPelaEntidadeId(Long entidadeId) {
+        return coordenadorRepository.findByUsuario_EntidadeId(entidadeId).stream().map(coordenadorEntityMapper::toDomain).toList();
+    }
 }

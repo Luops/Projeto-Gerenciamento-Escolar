@@ -2,14 +2,14 @@ package dev.ellyon.SistemaEscolar.infra.controller;
 
 
 import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
-import dev.ellyon.SistemaEscolar.core.usecase.BuscarCoordenadoresPeloNomeUseCase;
-import dev.ellyon.SistemaEscolar.core.usecase.BuscarTodosCoordenadoresUseCase;
-import dev.ellyon.SistemaEscolar.core.usecase.CriarCoordenadorUseCase;
+import dev.ellyon.SistemaEscolar.core.usecase.*;
 import dev.ellyon.SistemaEscolar.infra.dtos.CoordenadorDto;
 import dev.ellyon.SistemaEscolar.infra.mapper.CoordenadorDtoMapper;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,15 +21,17 @@ public class CoordenadorController {
     private final CoordenadorDtoMapper coordenadorDtoMapper; // Mapper para converter entre Coordenador e CoordenadorDto
     private final BuscarTodosCoordenadoresUseCase buscarCoordenadorUseCase;
     private final BuscarCoordenadoresPeloNomeUseCase buscarCoordenadoresPeloNomeUseCase;
+    private final BuscarCoordenadoresEntreDatasUseCase buscarCoordenadoresEntreDatasUseCaseUseCase;
+    private final BuscarCoordenadorPelaEntidadeIdUseCase buscarCoordenadorPelaEntidadeIdUseCase;
 
     // Constructor Injection
-
-
-    public CoordenadorController(CriarCoordenadorUseCase criarCoordenadorUseCase, CoordenadorDtoMapper coordenadorDtoMapper, BuscarTodosCoordenadoresUseCase buscarCoordenadorUseCase, BuscarCoordenadoresPeloNomeUseCase buscarCoordenadoresPeloNomeUseCase) {
+    public CoordenadorController(CriarCoordenadorUseCase criarCoordenadorUseCase, CoordenadorDtoMapper coordenadorDtoMapper, BuscarTodosCoordenadoresUseCase buscarCoordenadorUseCase, BuscarCoordenadoresPeloNomeUseCase buscarCoordenadoresPeloNomeUseCase, BuscarCoordenadoresEntreDatasUseCase buscarCoordenadoresEntreDatasUseCaseUseCase, BuscarCoordenadorPelaEntidadeIdUseCase buscarCoordenadorPelaEntidadeIdUseCase) {
         this.criarCoordenadorUseCase = criarCoordenadorUseCase;
         this.coordenadorDtoMapper = coordenadorDtoMapper;
         this.buscarCoordenadorUseCase = buscarCoordenadorUseCase;
         this.buscarCoordenadoresPeloNomeUseCase = buscarCoordenadoresPeloNomeUseCase;
+        this.buscarCoordenadoresEntreDatasUseCaseUseCase = buscarCoordenadoresEntreDatasUseCaseUseCase;
+        this.buscarCoordenadorPelaEntidadeIdUseCase = buscarCoordenadorPelaEntidadeIdUseCase;
     }
 
     // Endpoint para criar um novo coordenador
@@ -80,6 +82,25 @@ public class CoordenadorController {
     @GetMapping("buscarpelonome")
     public List<CoordenadorDto> buscarCoordenadoresPeloNome(@RequestParam String nome) {
         List<Coordenador> coordenadores = buscarCoordenadoresPeloNomeUseCase.execute(nome);
+        return coordenadores.stream()
+                .map(coordenador -> coordenadorDtoMapper.toDto(coordenador, null)) // Converte cada coordenador para DTO sem incluir senha
+                .toList();
+    }
+
+    // Endpoint para listar coordenadores pela data de cadastro
+    @GetMapping("buscarpeladata")
+    public List<CoordenadorDto> buscarCoordenadoresPeloPeriodo( @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataInicio,
+                                                                @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataFim) {
+        List<Coordenador> coordenadores = buscarCoordenadoresEntreDatasUseCaseUseCase.execute(dataInicio, dataFim);
+        return coordenadores.stream()
+                .map(coordenador -> coordenadorDtoMapper.toDto(coordenador, null)) // Converte cada coordenador para DTO sem incluir senha
+                .toList();
+    }
+
+    // Endpoint para listar coordenadores pelo nome
+    @GetMapping("buscarpelaentidadeid")
+    public List<CoordenadorDto> buscarCoordenadorPelaEntidadeId(@RequestParam Long entidadeId) {
+        List<Coordenador> coordenadores = buscarCoordenadorPelaEntidadeIdUseCase.execute(entidadeId);
         return coordenadores.stream()
                 .map(coordenador -> coordenadorDtoMapper.toDto(coordenador, null)) // Converte cada coordenador para DTO sem incluir senha
                 .toList();
