@@ -1,7 +1,7 @@
 package dev.ellyon.SistemaEscolar.infra.beans;
 
 import dev.ellyon.SistemaEscolar.core.gateway.CoordenadorGateway;
-import dev.ellyon.SistemaEscolar.core.usecase.*;
+import dev.ellyon.SistemaEscolar.core.usecase.CoordenadorUseCases.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -32,5 +32,10 @@ public class BeanConfig {
     @Bean
     public BuscarCoordenadorPelaEntidadeIdUseCase buscarCoordenadorPelaEntidadeIdUseCase(CoordenadorGateway coordenadorGateway) {
         return new BuscarCoordenadorPelaEntidadeIdUseCaseImpl(coordenadorGateway);
+    }
+
+    @Bean
+    public BuscarCoordenadoresPeloEmailUseCase buscarCoordenadoresPeloEmailUseCase(CoordenadorGateway coordenadorGateway) {
+        return new BuscarCoordenadoresPeloEmaiUseCaseImpl(coordenadorGateway);
     }
 }

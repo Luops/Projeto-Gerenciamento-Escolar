@@ -41,11 +41,9 @@ public class CoordenadorDtoMapper {
         dto.setSobrenome(coordenador.getSobrenome());
         dto.setCriadoEm(coordenador.getCriadoEm());
         dto.setAtualizadoEm(coordenador.getAtualizadoEm());
-        // Adicionar dados do usuario (SEM senha)
-        if (usuario != null) {
-            dto.setEmail(usuario.getEmail());
-            dto.setEntidadeId(usuario.getEntidadeId());
-        }
+        // Pegar dados do coordenador (que já tem email e entidadeId)
+        dto.setEmail(coordenador.getEmail());
+        dto.setEntidadeId(coordenador.getEntidadeId());
         return dto;
     }
 

@@ -9,6 +9,11 @@ public class Coordenador extends Entidade{
     private String nome;
     private String sobrenome;
 
+    // Campos opcionais do Usuario (transientes)
+    private String email;
+    private Long entidadeId;
+
+
     public Coordenador(Long id, String nome, LocalDateTime criadoEm, LocalDateTime atualizadoEm, String sobrenome) {
         super(id, criadoEm, atualizadoEm);
         this.nome = nome;
@@ -20,7 +25,7 @@ public class Coordenador extends Entidade{
     }
 
     public String getNome() {
-        return this.nome;
+        return nome;
     }
 
     public void setNome(String nome) {
@@ -28,11 +33,26 @@ public class Coordenador extends Entidade{
     }
 
     public String getSobrenome() {
-        return this.sobrenome;
+        return sobrenome;
     }
 
     public void setSobrenome(String sobrenome) {
         this.sobrenome = sobrenome;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Long getEntidadeId() {
+        return entidadeId;
+    }
+
+    public void setEntidadeId(Long entidadeId) {
+        this.entidadeId = entidadeId;
+    }
 }

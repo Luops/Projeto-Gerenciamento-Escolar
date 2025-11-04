@@ -1,4 +1,4 @@
-package dev.ellyon.SistemaEscolar.core.usecase;
+package dev.ellyon.SistemaEscolar.core.usecase.CoordenadorUseCases;
 
 import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
 import dev.ellyon.SistemaEscolar.core.gateway.CoordenadorGateway;
@@ -16,19 +16,22 @@ public class CriarCoordenadorUseCaseImpl implements CriarCoordenadorUseCase{
         return coordenadorGateway.criarCoordenador(coordenador);
     }
 }*/
-public class CriarCoordenadorUseCaseImpl implements CriarCoordenadorUseCase {
+public class EditarCoordenadorUseCaseImpl implements EditarCoordenadorUseCase {
     private final CoordenadorGateway coordenadorGateway;
 
-    public CriarCoordenadorUseCaseImpl(CoordenadorGateway coordenadorGateway) {
+    public EditarCoordenadorUseCaseImpl(CoordenadorGateway coordenadorGateway) {
         this.coordenadorGateway = coordenadorGateway;
     }
 
     @Override
-    public Coordenador execute(Coordenador coordenador, String email, String senha, Long entidadeId) {
-        if(coordenadorGateway.isCoordenadorExistentePorEmail(email)) {
-            throw new DuplicateCoordenadorEmailException("Já existe um coordenador com o email fornecido." + email);
+    public Coordenador execute(Coordenador coordenadorAtualizado, String email, String senha) {
+        // Validacoes
+        if (coordenadorAtualizado.getNome() == null || coordenadorAtualizado.getNome().isBlank()) {
+            throw new IllegalArgumentException("Nome não pode ser vazio");
         }
-        return coordenadorGateway.criarCoordenador(coordenador, email, senha, entidadeId);
+        if (coordenadorAtualizado.getSobrenome() == null || coordenadorAtualizado.getSobrenome().isBlank()) {
+            throw new IllegalArgumentException("Sobrenome não pode ser vazio");
+        }
+        return coordenadorGateway.editarCoordenador(coordenadorAtualizado, email, senha);
     }
-
 }

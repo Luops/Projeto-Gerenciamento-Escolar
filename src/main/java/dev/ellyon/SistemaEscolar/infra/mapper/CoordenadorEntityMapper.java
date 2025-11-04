@@ -57,4 +57,23 @@ public class CoordenadorEntityMapper {
                 entity.getSobrenome()
         );
     }
+
+    // ✅ NOVA VERSÃO - converte com dados do Usuario
+    public Coordenador toDomainWithUsuario(CoordenadorEntity entity) {
+        Coordenador coordenador = new Coordenador(
+                entity.getIdCoordenador(),
+                entity.getNome(),
+                entity.getCriadoEm(),
+                entity.getAtualizadoEm(),
+                entity.getSobrenome()
+        );
+
+        // Adicionar dados do usuario se existir
+        if (entity.getUsuario() != null) {
+            coordenador.setEmail(entity.getUsuario().getEmail());
+            coordenador.setEntidadeId(entity.getUsuario().getEntidadeId());
+        }
+
+        return coordenador;
+    }
 }

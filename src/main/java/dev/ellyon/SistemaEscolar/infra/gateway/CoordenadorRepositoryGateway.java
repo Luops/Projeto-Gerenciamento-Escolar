@@ -78,7 +78,7 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
 
     @Override
     public List<Coordenador> buscarTodosCoordenadores() {
-        return coordenadorRepository.findAll().stream().map(coordenadorEntityMapper::toDomain).toList();
+        return coordenadorRepository.findAll().stream().map(coordenadorEntityMapper::toDomainWithUsuario).toList();
     }
 
     @Override
@@ -88,16 +88,21 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
 
     @Override
     public List<Coordenador> buscarCoordenadoresPeloNome(String nome) {
-        return coordenadorRepository.findByNomeContainingIgnoreCase(nome).stream().map(coordenadorEntityMapper::toDomain).toList();
+        return coordenadorRepository.findByNomeContainingIgnoreCase(nome).stream().map(coordenadorEntityMapper::toDomainWithUsuario).toList();
     }
 
     @Override
     public List<Coordenador> buscarCoordenadoresEntreDatas(LocalDateTime dataInicio, LocalDateTime dataFim) {
-        return coordenadorRepository.findByCriadoEmBetween(dataInicio, dataFim).stream().map(coordenadorEntityMapper::toDomain).toList();
+        return coordenadorRepository.findByCriadoEmBetween(dataInicio, dataFim).stream().map(coordenadorEntityMapper::toDomainWithUsuario).toList();
     }
 
     @Override
     public List<Coordenador> buscarCoordenadoresPelaEntidadeId(Long entidadeId) {
-        return coordenadorRepository.findByUsuario_EntidadeId(entidadeId).stream().map(coordenadorEntityMapper::toDomain).toList();
+        return coordenadorRepository.findByUsuario_EntidadeId(entidadeId).stream().map(coordenadorEntityMapper::toDomainWithUsuario).toList();
+    }
+
+    @Override
+    public List<Coordenador> buscarCoordenadoresPeloEmail(String email) {
+        return coordenadorRepository.buscarPorEmail(email).stream().map(coordenadorEntityMapper::toDomainWithUsuario).toList();
     }
 }

@@ -2,7 +2,7 @@ package dev.ellyon.SistemaEscolar.infra.controller;
 
 
 import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
-import dev.ellyon.SistemaEscolar.core.usecase.*;
+import dev.ellyon.SistemaEscolar.core.usecase.CoordenadorUseCases.*;
 import dev.ellyon.SistemaEscolar.infra.dtos.CoordenadorDto;
 import dev.ellyon.SistemaEscolar.infra.mapper.CoordenadorDtoMapper;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,15 +23,17 @@ public class CoordenadorController {
     private final BuscarCoordenadoresPeloNomeUseCase buscarCoordenadoresPeloNomeUseCase;
     private final BuscarCoordenadoresEntreDatasUseCase buscarCoordenadoresEntreDatasUseCaseUseCase;
     private final BuscarCoordenadorPelaEntidadeIdUseCase buscarCoordenadorPelaEntidadeIdUseCase;
+    private final BuscarCoordenadoresPeloEmailUseCase buscarCoordenadoresPeloEmailUseCase;
 
     // Constructor Injection
-    public CoordenadorController(CriarCoordenadorUseCase criarCoordenadorUseCase, CoordenadorDtoMapper coordenadorDtoMapper, BuscarTodosCoordenadoresUseCase buscarCoordenadorUseCase, BuscarCoordenadoresPeloNomeUseCase buscarCoordenadoresPeloNomeUseCase, BuscarCoordenadoresEntreDatasUseCase buscarCoordenadoresEntreDatasUseCaseUseCase, BuscarCoordenadorPelaEntidadeIdUseCase buscarCoordenadorPelaEntidadeIdUseCase) {
+    public CoordenadorController(CriarCoordenadorUseCase criarCoordenadorUseCase, CoordenadorDtoMapper coordenadorDtoMapper, BuscarTodosCoordenadoresUseCase buscarCoordenadorUseCase, BuscarCoordenadoresPeloNomeUseCase buscarCoordenadoresPeloNomeUseCase, BuscarCoordenadoresEntreDatasUseCase buscarCoordenadoresEntreDatasUseCaseUseCase, BuscarCoordenadorPelaEntidadeIdUseCase buscarCoordenadorPelaEntidadeIdUseCase, BuscarCoordenadoresPeloEmailUseCase buscarCoordenadoresPeloEmailUseCase) {
         this.criarCoordenadorUseCase = criarCoordenadorUseCase;
         this.coordenadorDtoMapper = coordenadorDtoMapper;
         this.buscarCoordenadorUseCase = buscarCoordenadorUseCase;
         this.buscarCoordenadoresPeloNomeUseCase = buscarCoordenadoresPeloNomeUseCase;
         this.buscarCoordenadoresEntreDatasUseCaseUseCase = buscarCoordenadoresEntreDatasUseCaseUseCase;
         this.buscarCoordenadorPelaEntidadeIdUseCase = buscarCoordenadorPelaEntidadeIdUseCase;
+        this.buscarCoordenadoresPeloEmailUseCase = buscarCoordenadoresPeloEmailUseCase;
     }
 
     // Endpoint para criar um novo coordenador
@@ -97,10 +99,19 @@ public class CoordenadorController {
                 .toList();
     }
 
-    // Endpoint para listar coordenadores pelo nome
+    // Endpoint para listar coordenadores pela entidadeId
     @GetMapping("buscarpelaentidadeid")
     public List<CoordenadorDto> buscarCoordenadorPelaEntidadeId(@RequestParam Long entidadeId) {
         List<Coordenador> coordenadores = buscarCoordenadorPelaEntidadeIdUseCase.execute(entidadeId);
+        return coordenadores.stream()
+                .map(coordenador -> coordenadorDtoMapper.toDto(coordenador, null)) // Converte cada coordenador para DTO sem incluir senha
+                .toList();
+    }
+
+    // Endpoint para listar coordenadores pelo email
+    @GetMapping("buscarpeloemail")
+    public List<CoordenadorDto> buscarCoordenadoresPeloEmail(@RequestParam String email) {
+        List<Coordenador> coordenadores = buscarCoordenadoresPeloEmailUseCase.execute(email);
         return coordenadores.stream()
                 .map(coordenador -> coordenadorDtoMapper.toDto(coordenador, null)) // Converte cada coordenador para DTO sem incluir senha
                 .toList();
