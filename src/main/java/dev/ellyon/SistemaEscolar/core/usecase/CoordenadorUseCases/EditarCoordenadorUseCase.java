@@ -7,5 +7,5 @@ public interface CriarCoordenadorUseCase {
     public Coordenador execute(Coordenador coordenador);
 }*/
 public interface EditarCoordenadorUseCase {
-    public Coordenador execute(Coordenador coordenadorAtualizado, String email, String senha);
+    public Coordenador execute(Long id, Coordenador coordenadorAtualizado, String email, String senha);
 }

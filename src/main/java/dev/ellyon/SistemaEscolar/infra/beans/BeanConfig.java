@@ -38,4 +38,13 @@ public class BeanConfig {
     public BuscarCoordenadoresPeloEmailUseCase buscarCoordenadoresPeloEmailUseCase(CoordenadorGateway coordenadorGateway) {
         return new BuscarCoordenadoresPeloEmaiUseCaseImpl(coordenadorGateway);
     }
+
+    @Bean
+    public EditarCoordenadorUseCase editarCoordenadorUseCase(CoordenadorGateway coordenadorGateway) {
+        return new EditarCoordenadorUseCaseImpl(coordenadorGateway);
+    }
+
+    @Bean public DeletarCoordenadorUseCase deletarCoordenadorUseCase(CoordenadorGateway coordenadorGateway){
+        return new DeletarCoordenadorUseCaseImpl(coordenadorGateway);
+    }
 }

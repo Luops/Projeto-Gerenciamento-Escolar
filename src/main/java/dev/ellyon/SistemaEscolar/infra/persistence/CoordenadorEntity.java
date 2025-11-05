@@ -21,7 +21,7 @@ public class CoordenadorEntity{
     @Column(name = "id_usuario")
     private Long idUsuario; // FK para usuario
 
-    @Column(name = "criado_em")
+    @Column(name = "criado_em", updatable = false)
     private LocalDateTime criadoEm;
 
     @Column(name = "atualizado_em")

@@ -24,9 +24,11 @@ public class CoordenadorController {
     private final BuscarCoordenadoresEntreDatasUseCase buscarCoordenadoresEntreDatasUseCaseUseCase;
     private final BuscarCoordenadorPelaEntidadeIdUseCase buscarCoordenadorPelaEntidadeIdUseCase;
     private final BuscarCoordenadoresPeloEmailUseCase buscarCoordenadoresPeloEmailUseCase;
+    private final EditarCoordenadorUseCase editarCoordenadorUseCase;
+    private final DeletarCoordenadorUseCase deletarCoordenadorUseCase;
 
     // Constructor Injection
-    public CoordenadorController(CriarCoordenadorUseCase criarCoordenadorUseCase, CoordenadorDtoMapper coordenadorDtoMapper, BuscarTodosCoordenadoresUseCase buscarCoordenadorUseCase, BuscarCoordenadoresPeloNomeUseCase buscarCoordenadoresPeloNomeUseCase, BuscarCoordenadoresEntreDatasUseCase buscarCoordenadoresEntreDatasUseCaseUseCase, BuscarCoordenadorPelaEntidadeIdUseCase buscarCoordenadorPelaEntidadeIdUseCase, BuscarCoordenadoresPeloEmailUseCase buscarCoordenadoresPeloEmailUseCase) {
+    public CoordenadorController(CriarCoordenadorUseCase criarCoordenadorUseCase, CoordenadorDtoMapper coordenadorDtoMapper, BuscarTodosCoordenadoresUseCase buscarCoordenadorUseCase, BuscarCoordenadoresPeloNomeUseCase buscarCoordenadoresPeloNomeUseCase, BuscarCoordenadoresEntreDatasUseCase buscarCoordenadoresEntreDatasUseCaseUseCase, BuscarCoordenadorPelaEntidadeIdUseCase buscarCoordenadorPelaEntidadeIdUseCase, BuscarCoordenadoresPeloEmailUseCase buscarCoordenadoresPeloEmailUseCase, EditarCoordenadorUseCase editarCoordenadorUseCase, DeletarCoordenadorUseCase deletarCoordenadorUseCase) {
         this.criarCoordenadorUseCase = criarCoordenadorUseCase;
         this.coordenadorDtoMapper = coordenadorDtoMapper;
         this.buscarCoordenadorUseCase = buscarCoordenadorUseCase;
@@ -34,15 +36,10 @@ public class CoordenadorController {
         this.buscarCoordenadoresEntreDatasUseCaseUseCase = buscarCoordenadoresEntreDatasUseCaseUseCase;
         this.buscarCoordenadorPelaEntidadeIdUseCase = buscarCoordenadorPelaEntidadeIdUseCase;
         this.buscarCoordenadoresPeloEmailUseCase = buscarCoordenadoresPeloEmailUseCase;
+        this.editarCoordenadorUseCase = editarCoordenadorUseCase;
+        this.deletarCoordenadorUseCase = deletarCoordenadorUseCase;
     }
 
-    // Endpoint para criar um novo coordenador
-    /*@PostMapping("criar")
-    public CoordenadorDto criarCoordenador(@RequestBody CoordenadorDto coordenadorDto) {
-        // Executa o caso de uso para criar um novo coordenador. Pega o DTO, converte para domínio e passa para o caso de uso pois ele recebe somente a entidade de domínio
-        Coordenador novoCoordenador = criarCoordenadorUseCase.execute(coordenadorDtoMapper.toDomain(coordenadorDto));
-        return coordenadorDtoMapper.toDto(novoCoordenador); // Converte o coordenador criado de volta para DTO
-    }*/
     @PostMapping("criar")
     public ResponseEntity<Map<String, Object>> criarCoordenador(@RequestBody CoordenadorDto coordenadorDto) {
         Coordenador coordenadorDominio = coordenadorDtoMapper.toDomain(coordenadorDto);
@@ -115,5 +112,79 @@ public class CoordenadorController {
         return coordenadores.stream()
                 .map(coordenador -> coordenadorDtoMapper.toDto(coordenador, null)) // Converte cada coordenador para DTO sem incluir senha
                 .toList();
+    }
+
+    // Endpoint para editar coordenador
+    @PutMapping("editar/{id}")
+    public ResponseEntity<Map<String, Object>> editarCoordenador(
+            @PathVariable Long id,
+            @RequestBody CoordenadorDto coordenadorDto) {
+        try {
+            // Converter DTO para domínio
+            Coordenador coordenadorAtualizado = new Coordenador(
+                    null,
+                    coordenadorDto.getNome(),
+                    null,
+                    null,
+                    coordenadorDto.getSobrenome()
+            );
+
+            // Executar use case
+            Coordenador coordenadorEditado = editarCoordenadorUseCase.execute(
+                    id, coordenadorAtualizado, coordenadorDto.getEmail(), coordenadorDto.getSenha(
+            )
+            );
+
+            // Montar resposta
+            CoordenadorDto resposta = new CoordenadorDto();
+            resposta.setId(coordenadorEditado.getId());
+            resposta.setNome(coordenadorEditado.getNome());
+            resposta.setSobrenome(coordenadorEditado.getSobrenome());
+            resposta.setEmail(coordenadorEditado.getEmail());
+            resposta.setEntidadeId(coordenadorEditado.getEntidadeId());
+            resposta.setAtualizadoEm(coordenadorEditado.getAtualizadoEm());
+            resposta.setCriadoEm(coordenadorEditado.getCriadoEm());
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("Message: ", "Coordenador editado com sucesso!");
+            response.put("Dados do Coordenador: ", resposta);
+
+            return ResponseEntity.ok(response);
+
+        } catch (IllegalArgumentException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("Error: ", e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
+
+        } catch (RuntimeException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("Error: ", e.getMessage());
+            return ResponseEntity.status(404).body(errorResponse);
+        }
+    }
+
+
+    // Endpoint para deletar coordenador
+    @DeleteMapping("deletar/{id}")
+    public ResponseEntity<Map<String, Object>> deletarCoordenador(@PathVariable Long id) {
+        try {
+            deletarCoordenadorUseCase.execute(id);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("Message", "Coordenador deletado com sucesso!");
+            response.put("ID deletado", id);
+
+            return ResponseEntity.ok(response);
+
+        } catch (IllegalArgumentException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("Error", e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
+
+        } catch (RuntimeException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("Error", e.getMessage());
+            return ResponseEntity.status(404).body(errorResponse);
+        }
     }
 }

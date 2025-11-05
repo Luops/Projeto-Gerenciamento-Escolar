@@ -13,27 +13,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
-/*
-@Component
-public class CoordenadorRepositoryGateway implements CoordenadorGateway {
-    // Injeção do repositório de coordenadores. Usar o JPA Repository para fazer operações no banco de dados.
-    private final CoordenadorRepository coordenadorRepository; // Repositório de coordenadores. Pegar as queries do banco de dados.
-    private final CoordenadorEntityMapper coordenadorEntityMapper;
-
-    public CoordenadorRepositoryGateway(CoordenadorRepository coordenadorRepository, CoordenadorEntityMapper coordenadorEntityMapper, UsuarioRepository usuarioRepository, UsuarioEntity usuarioEntity) {
-        this.coordenadorRepository = coordenadorRepository;
-        this.coordenadorEntityMapper = new CoordenadorEntityMapper();
-    }
-
-    @Override
-    public Coordenador criarCoordenador(Coordenador coordenador) {
-        CoordenadorEntity coordenadorEntity = coordenadorEntityMapper.toEntity(coordenador); // Converter a entidade de domínio para a entidade de persistência.
-        CoordenadorEntity novoCoordenador = coordenadorRepository.save(coordenadorEntity); // Salvar a entidade no banco de dados.
-        return coordenadorEntityMapper.toDomain(novoCoordenador); // Converter a entidade de persistência de volta para a entidade de domínio.
-    }
-}
-*/
 @Component
 public class CoordenadorRepositoryGateway implements CoordenadorGateway {
     private final CoordenadorRepository coordenadorRepository;
@@ -58,7 +39,7 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
         usuario.setSenha(senha);
         usuario.setEntidadeId(entidadeId);
         usuario.setRole(RoleEnum.COORDENADOR);
-        usuario.setCriadoEm(LocalDateTime.now());
+        //usuario.setCriadoEm(LocalDateTime.now());
         usuario.setAtualizadoEm(LocalDateTime.now());
 
         UsuarioEntity usuarioSalvo = usuarioRepository.save(usuario);
@@ -68,8 +49,8 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
         coordenadorEntity.setNome(coordenador.getNome());
         coordenadorEntity.setSobrenome(coordenador.getSobrenome());
         coordenadorEntity.setIdUsuario(usuarioSalvo.getIdUsuario());
-        coordenadorEntity.setCriadoEm(LocalDateTime.now());
-        coordenadorEntity.setAtualizadoEm(LocalDateTime.now());
+        // coordenadorEntity.setCriadoEm(LocalDateTime.now());
+        //coordenadorEntity.setAtualizadoEm(LocalDateTime.now());
 
         CoordenadorEntity novoCoordenador = coordenadorRepository.save(coordenadorEntity);
 
@@ -104,5 +85,86 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
     @Override
     public List<Coordenador> buscarCoordenadoresPeloEmail(String email) {
         return coordenadorRepository.buscarPorEmail(email).stream().map(coordenadorEntityMapper::toDomainWithUsuario).toList();
+    }
+
+    @Override
+    @Transactional
+    public Coordenador editarCoordenador(Long id, Coordenador coordenadorAtualizado, String email, String senha) {
+        // 1. Buscar coordenador existente
+        CoordenadorEntity coordenadorExistente = coordenadorRepository.findByIdWithUsuario(id)
+                .orElseThrow(() -> new RuntimeException("Coordenador não encontrado com ID: " + id));
+
+        // LOG ANTES
+        System.out.println("=== ANTES DA EDIÇÃO ===");
+        System.out.println("Coordenador criadoEm: " + coordenadorExistente.getCriadoEm());
+        System.out.println("Coordenador atualizadoEm: " + coordenadorExistente.getAtualizadoEm());
+        System.out.println("Usuario criadoEm: " + coordenadorExistente.getUsuario().getCriadoEm());
+        System.out.println("Usuario atualizadoEm: " + coordenadorExistente.getUsuario().getAtualizadoEm());
+
+        // 2. Atualizar dados do Coordenador
+        coordenadorExistente.setNome(coordenadorAtualizado.getNome());
+        coordenadorExistente.setSobrenome(coordenadorAtualizado.getSobrenome());
+        coordenadorExistente.setAtualizadoEm(LocalDateTime.now());
+
+        // 3. Atualizar dados do Usuario relacionado
+        UsuarioEntity usuario = coordenadorExistente.getUsuario();
+        if (usuario == null) {
+            throw new RuntimeException("Usuario não encontrado para o coordenador ID: " + id);
+        }
+
+        // ATUALIZAR EMAIL se fornecido
+        if (email != null && !email.isBlank()) {
+            usuario.setEmail(email);
+        }
+
+        // ATUALIZAR SENHA se fornecida
+        if (senha != null && !senha.isBlank()) {
+            usuario.setSenha(senha);
+        }
+
+        usuario.setAtualizadoEm(LocalDateTime.now());
+
+        // LOG ANTES DE SALVAR
+        System.out.println("=== ANTES DE SALVAR ===");
+        System.out.println("Coordenador criadoEm: " + coordenadorExistente.getCriadoEm());
+        System.out.println("Coordenador atualizadoEm: " + coordenadorExistente.getAtualizadoEm());
+        System.out.println("Usuario criadoEm: " + usuario.getCriadoEm());
+        System.out.println("Usuario atualizadoEm: " + usuario.getAtualizadoEm());
+
+        // 4. Salvar alterações
+        usuarioRepository.save(usuario);
+        CoordenadorEntity coordenadorSalvo = coordenadorRepository.save(coordenadorExistente);
+
+        // LOG DEPOIS DE SALVAR
+        System.out.println("=== DEPOIS DE SALVAR ===");
+        System.out.println("Coordenador criadoEm: " + coordenadorSalvo.getCriadoEm());
+        System.out.println("Coordenador atualizadoEm: " + coordenadorSalvo.getAtualizadoEm());
+        System.out.println("Usuario criadoEm: " + coordenadorSalvo.getUsuario().getCriadoEm());
+        System.out.println("Usuario atualizadoEm: " + coordenadorSalvo.getUsuario().getAtualizadoEm());
+
+        // 5. Retornar com dados completos
+        return coordenadorEntityMapper.toDomainWithUsuario(coordenadorSalvo);
+    }
+
+    @Override
+    public Optional<Coordenador> buscarCoordenadorPeloId(Long id) {
+        return coordenadorRepository.findByIdWithUsuario(id).stream().map(coordenadorEntityMapper::toDomainWithUsuario).findFirst();
+    }
+
+    @Override
+    public Coordenador deletarCoordenador(Long id) {
+        // 1. Buscar coordenador com usuario
+        CoordenadorEntity coordenador = coordenadorRepository.findByIdWithUsuario(id)
+                .orElseThrow(() -> new RuntimeException("Coordenador não encontrado com ID: " + id));
+
+        // 2. Guardar o ID do usuario
+        Long idUsuario = coordenador.getIdUsuario();
+
+        // 3. Deletar coordenador primeiro
+        coordenadorRepository.deleteById(id);
+
+        // 4. Deletar usuario depois
+        usuarioRepository.deleteById(idUsuario);
+        return coordenadorEntityMapper.toDomain(coordenador);
     }
 }

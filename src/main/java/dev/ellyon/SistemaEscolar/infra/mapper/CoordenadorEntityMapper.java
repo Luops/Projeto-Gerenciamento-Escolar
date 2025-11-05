@@ -42,8 +42,8 @@ public class CoordenadorEntityMapper {
         entity.setIdCoordenador(coordenador.getId());
         entity.setNome(coordenador.getNome());
         entity.setSobrenome(coordenador.getSobrenome());
-        entity.setCriadoEm(coordenador.getCriadoEm());
         entity.setAtualizadoEm(coordenador.getAtualizadoEm());
+        entity.setCriadoEm(coordenador.getCriadoEm());
         return entity;
     }
 
@@ -52,8 +52,8 @@ public class CoordenadorEntityMapper {
         return new Coordenador(
                 entity.getIdCoordenador(),
                 entity.getNome(),
-                entity.getCriadoEm(),
                 entity.getAtualizadoEm(),
+                entity.getCriadoEm(),
                 entity.getSobrenome()
         );
     }
@@ -63,8 +63,8 @@ public class CoordenadorEntityMapper {
         Coordenador coordenador = new Coordenador(
                 entity.getIdCoordenador(),
                 entity.getNome(),
-                entity.getCriadoEm(),
                 entity.getAtualizadoEm(),
+                entity.getCriadoEm(),
                 entity.getSobrenome()
         );
 

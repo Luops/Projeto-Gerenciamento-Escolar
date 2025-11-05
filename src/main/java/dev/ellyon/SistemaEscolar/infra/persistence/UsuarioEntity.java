@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "usuario")
-@Data
 public class UsuarioEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +25,7 @@ public class UsuarioEntity{
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private RoleEnum role;
-    @Column(name = "criado_em")
+    @Column(name = "criado_em", updatable = false)
     private LocalDateTime criadoEm;
     @Column(name = "atualizado_em")
     private LocalDateTime atualizadoEm;

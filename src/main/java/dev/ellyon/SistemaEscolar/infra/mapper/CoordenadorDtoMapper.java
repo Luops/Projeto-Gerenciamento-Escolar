@@ -39,8 +39,8 @@ public class CoordenadorDtoMapper {
         dto.setId(coordenador.getId());
         dto.setNome(coordenador.getNome());
         dto.setSobrenome(coordenador.getSobrenome());
-        dto.setCriadoEm(coordenador.getCriadoEm());
         dto.setAtualizadoEm(coordenador.getAtualizadoEm());
+        dto.setCriadoEm(coordenador.getCriadoEm());
         // Pegar dados do coordenador (que já tem email e entidadeId)
         dto.setEmail(coordenador.getEmail());
         dto.setEntidadeId(coordenador.getEntidadeId());
@@ -51,8 +51,8 @@ public class CoordenadorDtoMapper {
         return new Coordenador(
                 dto.getId(),
                 dto.getNome(),
-                dto.getCriadoEm(),
                 dto.getAtualizadoEm(),
+                dto.getCriadoEm(),
                 dto.getSobrenome()
         );
     }

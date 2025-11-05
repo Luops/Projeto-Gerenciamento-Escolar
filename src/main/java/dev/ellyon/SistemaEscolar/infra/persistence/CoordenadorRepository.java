@@ -24,4 +24,7 @@ public interface CoordenadorRepository extends JpaRepository<CoordenadorEntity, 
             "WHERE LOWER(u.email) LIKE LOWER(CONCAT('%', :email, '%'))")
     List<CoordenadorEntity> buscarPorEmail(@Param("email") String email);
 
+    @Query("SELECT c FROM CoordenadorEntity c JOIN FETCH c.usuario WHERE c.idCoordenador = :id")
+    Optional<CoordenadorEntity> findByIdWithUsuario(@Param("id") Long id);
+
 }

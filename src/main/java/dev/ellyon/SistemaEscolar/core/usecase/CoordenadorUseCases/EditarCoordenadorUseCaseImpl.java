@@ -24,7 +24,7 @@ public class EditarCoordenadorUseCaseImpl implements EditarCoordenadorUseCase {
     }
 
     @Override
-    public Coordenador execute(Coordenador coordenadorAtualizado, String email, String senha) {
+    public Coordenador execute(Long id, Coordenador coordenadorAtualizado, String email, String senha) {
         // Validacoes
         if (coordenadorAtualizado.getNome() == null || coordenadorAtualizado.getNome().isBlank()) {
             throw new IllegalArgumentException("Nome não pode ser vazio");
@@ -32,6 +32,6 @@ public class EditarCoordenadorUseCaseImpl implements EditarCoordenadorUseCase {
         if (coordenadorAtualizado.getSobrenome() == null || coordenadorAtualizado.getSobrenome().isBlank()) {
             throw new IllegalArgumentException("Sobrenome não pode ser vazio");
         }
-        return coordenadorGateway.editarCoordenador(coordenadorAtualizado, email, senha);
+        return coordenadorGateway.editarCoordenador(id, coordenadorAtualizado, email, senha);
     }
 }
