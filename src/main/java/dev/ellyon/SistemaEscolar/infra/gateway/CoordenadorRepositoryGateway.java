@@ -147,24 +147,27 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
     }
 
     @Override
-    public Optional<Coordenador> buscarCoordenadorPeloId(Long id) {
-        return coordenadorRepository.findByIdWithUsuario(id).stream().map(coordenadorEntityMapper::toDomainWithUsuario).findFirst();
+    public Coordenador buscarCoordenadorPeloId(Long id) {
+        CoordenadorEntity coordenadorEntity = coordenadorRepository.findByIdWithUsuario(id)
+                .orElseThrow(() -> new RuntimeException("Coordenador não encontrado com ID: " + id));
+
+        return coordenadorEntityMapper.toDomainWithUsuario(coordenadorEntity);
     }
 
     @Override
-    public Coordenador deletarCoordenador(Long id) {
-        // 1. Buscar coordenador com usuario
+    @Transactional
+    public void deletarCoordenador(Long id) {
+        // 1. Buscar coordenador para garantir que existe
         CoordenadorEntity coordenador = coordenadorRepository.findByIdWithUsuario(id)
                 .orElseThrow(() -> new RuntimeException("Coordenador não encontrado com ID: " + id));
 
         // 2. Guardar o ID do usuario
         Long idUsuario = coordenador.getIdUsuario();
 
-        // 3. Deletar coordenador primeiro
+        // 3. Deletar coordenador primeiro (por causa da FK)
         coordenadorRepository.deleteById(id);
 
         // 4. Deletar usuario depois
         usuarioRepository.deleteById(idUsuario);
-        return coordenadorEntityMapper.toDomain(coordenador);
     }
 }

@@ -14,6 +14,17 @@ public class BuscarCoordenadoresPeloNomeUseCaseImpl implements BuscarCoordenador
 
     @Override
     public List<Coordenador> execute(String nome) {
+        validarNome(nome);
         return coordenadorGateway.buscarCoordenadoresPeloNome(nome);
+    }
+
+    private void validarNome(String nome) {
+        if (nome == null || nome.trim().isEmpty()) {
+            throw new IllegalArgumentException("O nome não pode ser nulo ou vazio.");
+        }
+
+        if (nome.trim().length() < 2) {
+            throw new IllegalArgumentException("O nome deve ter no mínimo 2 caracteres.");
+        }
     }
 }

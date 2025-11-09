@@ -1,5 +1,6 @@
 package dev.ellyon.SistemaEscolar.infra.persistence;
 
+import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

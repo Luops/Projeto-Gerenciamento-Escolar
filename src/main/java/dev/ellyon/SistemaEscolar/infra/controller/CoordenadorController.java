@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/coordenador/")
@@ -24,11 +25,14 @@ public class CoordenadorController {
     private final BuscarCoordenadoresEntreDatasUseCase buscarCoordenadoresEntreDatasUseCaseUseCase;
     private final BuscarCoordenadorPelaEntidadeIdUseCase buscarCoordenadorPelaEntidadeIdUseCase;
     private final BuscarCoordenadoresPeloEmailUseCase buscarCoordenadoresPeloEmailUseCase;
+    private final BuscarCoordenadorPeloIdUseCase buscarCoordenadorPeloId;
     private final EditarCoordenadorUseCase editarCoordenadorUseCase;
     private final DeletarCoordenadorUseCase deletarCoordenadorUseCase;
 
     // Constructor Injection
-    public CoordenadorController(CriarCoordenadorUseCase criarCoordenadorUseCase, CoordenadorDtoMapper coordenadorDtoMapper, BuscarTodosCoordenadoresUseCase buscarCoordenadorUseCase, BuscarCoordenadoresPeloNomeUseCase buscarCoordenadoresPeloNomeUseCase, BuscarCoordenadoresEntreDatasUseCase buscarCoordenadoresEntreDatasUseCaseUseCase, BuscarCoordenadorPelaEntidadeIdUseCase buscarCoordenadorPelaEntidadeIdUseCase, BuscarCoordenadoresPeloEmailUseCase buscarCoordenadoresPeloEmailUseCase, EditarCoordenadorUseCase editarCoordenadorUseCase, DeletarCoordenadorUseCase deletarCoordenadorUseCase) {
+
+
+    public CoordenadorController(CriarCoordenadorUseCase criarCoordenadorUseCase, CoordenadorDtoMapper coordenadorDtoMapper, BuscarTodosCoordenadoresUseCase buscarCoordenadorUseCase, BuscarCoordenadoresPeloNomeUseCase buscarCoordenadoresPeloNomeUseCase, BuscarCoordenadoresEntreDatasUseCase buscarCoordenadoresEntreDatasUseCaseUseCase, BuscarCoordenadorPelaEntidadeIdUseCase buscarCoordenadorPelaEntidadeIdUseCase, BuscarCoordenadoresPeloEmailUseCase buscarCoordenadoresPeloEmailUseCase, BuscarCoordenadorPeloIdUseCase buscarCoordenadorPeloId, EditarCoordenadorUseCase editarCoordenadorUseCase, DeletarCoordenadorUseCase deletarCoordenadorUseCase) {
         this.criarCoordenadorUseCase = criarCoordenadorUseCase;
         this.coordenadorDtoMapper = coordenadorDtoMapper;
         this.buscarCoordenadorUseCase = buscarCoordenadorUseCase;
@@ -36,6 +40,7 @@ public class CoordenadorController {
         this.buscarCoordenadoresEntreDatasUseCaseUseCase = buscarCoordenadoresEntreDatasUseCaseUseCase;
         this.buscarCoordenadorPelaEntidadeIdUseCase = buscarCoordenadorPelaEntidadeIdUseCase;
         this.buscarCoordenadoresPeloEmailUseCase = buscarCoordenadoresPeloEmailUseCase;
+        this.buscarCoordenadorPeloId = buscarCoordenadorPeloId;
         this.editarCoordenadorUseCase = editarCoordenadorUseCase;
         this.deletarCoordenadorUseCase = deletarCoordenadorUseCase;
     }
@@ -79,11 +84,12 @@ public class CoordenadorController {
 
     // Endpoint para listar coordenadores pelo nome
     @GetMapping("buscarpelonome")
-    public List<CoordenadorDto> buscarCoordenadoresPeloNome(@RequestParam String nome) {
+    public ResponseEntity<List<CoordenadorDto>> buscarCoordenadoresPeloNome(@RequestParam String nome) {
         List<Coordenador> coordenadores = buscarCoordenadoresPeloNomeUseCase.execute(nome);
-        return coordenadores.stream()
+        List<CoordenadorDto> response = coordenadores.stream()
                 .map(coordenador -> coordenadorDtoMapper.toDto(coordenador, null)) // Converte cada coordenador para DTO sem incluir senha
                 .toList();
+        return ResponseEntity.ok(response);
     }
 
     // Endpoint para listar coordenadores pela data de cadastro
@@ -114,6 +120,33 @@ public class CoordenadorController {
                 .toList();
     }
 
+    // Endpoint para buscar coordenador pelo
+    @GetMapping("buscarpeloid/{id}")
+    public ResponseEntity<Map<String, Object>> buscarPeloId(
+            @PathVariable Long id) {
+        try {
+            Coordenador coordenador = buscarCoordenadorPeloId.execute(id);
+
+            CoordenadorDto resposta = coordenadorDtoMapper.toDto(coordenador, null);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("Message", "Coordenador encontrado!");
+            response.put("Dados do Coordenador", resposta);
+
+            return ResponseEntity.ok(response);
+
+        } catch (IllegalArgumentException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("Error", e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
+
+        } catch (RuntimeException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("Error", e.getMessage());
+            return ResponseEntity.status(404).body(errorResponse);
+        }
+    }
+
     // Endpoint para editar coordenador
     @PutMapping("editar/{id}")
     public ResponseEntity<Map<String, Object>> editarCoordenador(
@@ -132,7 +165,7 @@ public class CoordenadorController {
             // Executar use case
             Coordenador coordenadorEditado = editarCoordenadorUseCase.execute(
                     id, coordenadorAtualizado, coordenadorDto.getEmail(), coordenadorDto.getSenha(
-            )
+                    )
             );
 
             // Montar resposta
@@ -162,7 +195,6 @@ public class CoordenadorController {
             return ResponseEntity.status(404).body(errorResponse);
         }
     }
-
 
     // Endpoint para deletar coordenador
     @DeleteMapping("deletar/{id}")

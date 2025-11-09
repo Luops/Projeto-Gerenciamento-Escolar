@@ -44,6 +44,11 @@ public class BeanConfig {
         return new EditarCoordenadorUseCaseImpl(coordenadorGateway);
     }
 
+    @Bean
+    public BuscarCoordenadorPeloIdUseCase buscarCoordenadorPeloIdUseCase(CoordenadorGateway coordenadorGateway){
+        return new BuscarCoordenadorPeloIdUseCaseImpl(coordenadorGateway);
+    }
+
     @Bean public DeletarCoordenadorUseCase deletarCoordenadorUseCase(CoordenadorGateway coordenadorGateway){
         return new DeletarCoordenadorUseCaseImpl(coordenadorGateway);
     }

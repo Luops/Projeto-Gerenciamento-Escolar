@@ -3,10 +3,13 @@ package dev.ellyon.SistemaEscolar.core.usecase.CoordenadorUseCases;
 import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
 import dev.ellyon.SistemaEscolar.core.gateway.CoordenadorGateway;
 
-public class DeletarCoordenadorUseCaseImpl implements DeletarCoordenadorUseCase {
+import java.util.List;
+import java.util.Optional;
+
+public class BuscarCoordenadorPeloIdUseCaseImpl implements BuscarCoordenadorPeloIdUseCase{
     private final CoordenadorGateway coordenadorGateway;
 
-    public DeletarCoordenadorUseCaseImpl(CoordenadorGateway coordenadorGateway) {
+    public BuscarCoordenadorPeloIdUseCaseImpl(CoordenadorGateway coordenadorGateway) {
         this.coordenadorGateway = coordenadorGateway;
     }
 
@@ -16,7 +19,6 @@ public class DeletarCoordenadorUseCaseImpl implements DeletarCoordenadorUseCase 
             throw new IllegalArgumentException("ID inválido");
         }
 
-        coordenadorGateway.deletarCoordenador(id);
-        return null;
+        return coordenadorGateway.buscarCoordenadorPeloId(id);
     }
 }

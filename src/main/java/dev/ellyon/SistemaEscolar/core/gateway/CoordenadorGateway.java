@@ -16,8 +16,8 @@ public interface CoordenadorGateway {
 public interface CoordenadorGateway {
     Coordenador criarCoordenador(Coordenador coordenador, String email, String senha, Long entidadeId);
     Coordenador editarCoordenador(Long id, Coordenador coordenadorAtualizado, String email, String senha);
-    Coordenador deletarCoordenador(Long id);
-    Optional<Coordenador> buscarCoordenadorPeloId(Long id);
+    void deletarCoordenador(Long id);
+    Coordenador buscarCoordenadorPeloId(Long id);
     List<Coordenador> buscarTodosCoordenadores();
     List<Coordenador> buscarCoordenadoresPeloNome(String nome);
     List<Coordenador> buscarCoordenadoresEntreDatas(LocalDateTime dataInicio, LocalDateTime dataFim);
