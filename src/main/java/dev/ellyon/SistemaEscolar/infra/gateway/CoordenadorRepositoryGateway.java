@@ -62,6 +62,7 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
         return coordenadorRepository.findAll().stream().map(coordenadorEntityMapper::toDomainWithUsuario).toList();
     }
 
+    // Verifica se já existe um coordenador com o email fornecido ao criar ou editar
     @Override
     public boolean isCoordenadorExistentePorEmail(String email) {
         return coordenadorRepository.findAll().stream().anyMatch(coordenador -> coordenador.getUsuario().getEmail().equalsIgnoreCase(email));
@@ -84,7 +85,11 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
 
     @Override
     public List<Coordenador> buscarCoordenadoresPeloEmail(String email) {
-        return coordenadorRepository.buscarPorEmail(email).stream().map(coordenadorEntityMapper::toDomainWithUsuario).toList();
+        List <Coordenador> coordenadores = coordenadorRepository.buscarPorEmail(email).stream().map(coordenadorEntityMapper::toDomainWithUsuario).toList();
+        if(coordenadores.isEmpty()){
+            throw new RuntimeException("Nenhum coordenador encontrado com o email: " + email);
+        }
+        return coordenadores;
     }
 
     @Override
