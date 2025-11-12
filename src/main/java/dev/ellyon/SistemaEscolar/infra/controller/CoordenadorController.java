@@ -5,6 +5,7 @@ import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
 import dev.ellyon.SistemaEscolar.core.usecase.CoordenadorUseCases.*;
 import dev.ellyon.SistemaEscolar.infra.dtos.CoordenadorDto;
 import dev.ellyon.SistemaEscolar.infra.mapper.CoordenadorDtoMapper;
+import jakarta.websocket.OnClose;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -84,22 +85,56 @@ public class CoordenadorController {
 
     // Endpoint para listar coordenadores pelo nome
     @GetMapping("buscarpelonome")
-    public ResponseEntity<List<CoordenadorDto>> buscarCoordenadoresPeloNome(@RequestParam String nome) {
+    public ResponseEntity<Map<String, Object>> buscarCoordenadoresPeloNome(@RequestParam String nome) {
         List<Coordenador> coordenadores = buscarCoordenadoresPeloNomeUseCase.execute(nome);
-        List<CoordenadorDto> response = coordenadores.stream()
+        Map<String, Object> response = new HashMap<>();
+        // Verificar se a lista está vazia
+        if (coordenadores.isEmpty()) {
+            response.put("message", "Nenhum coordenador foi encontrado com este nome.");
+            response.put("nome", nome);
+            response.put("total", 0);
+            response.put("dados", List.of()); // Lista vazia
+            return ResponseEntity.ok(response);
+        }
+        List<CoordenadorDto> coordenadoresDto = coordenadores.stream()
                 .map(coordenador -> coordenadorDtoMapper.toDto(coordenador, null)) // Converte cada coordenador para DTO sem incluir senha
                 .toList();
+        response.put("message", "Coordenadores encontrados com sucesso!");
+        response.put("nome", nome);
+        response.put("total", coordenadoresDto.size());
+        response.put("dados", coordenadoresDto);
+
         return ResponseEntity.ok(response);
     }
 
     // Endpoint para listar coordenadores pela data de cadastro
     @GetMapping("buscarpeladata")
-    public List<CoordenadorDto> buscarCoordenadoresPeloPeriodo( @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataInicio,
-                                                                @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataFim) {
+    public ResponseEntity<Map<String, Object>> buscarCoordenadoresPeloPeriodo(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataInicio,
+                                                                               @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataFim) {
         List<Coordenador> coordenadores = buscarCoordenadoresEntreDatasUseCaseUseCase.execute(dataInicio, dataFim);
-        return coordenadores.stream()
-                .map(coordenador -> coordenadorDtoMapper.toDto(coordenador, null)) // Converte cada coordenador para DTO sem incluir senha
+        Map<String, Object> response = new HashMap<>();
+        // Verificar se a lista está vazia
+        if (coordenadores.isEmpty()) {
+            response.put("message", "Nenhum coordenador foi encontrado no período informado.");
+            response.put("dataInicio", dataInicio);
+            response.put("dataFim", dataFim);
+            response.put("total", 0);
+            response.put("dados", List.of()); // Lista vazia
+            return ResponseEntity.ok(response);
+        }
+
+        // Se encontrou coordenadores
+        List<CoordenadorDto> coordenadoresDto = coordenadores.stream()
+                .map(coordenador -> coordenadorDtoMapper.toDto(coordenador, null))
                 .toList();
+
+        response.put("message", "Coordenadores encontrados com sucesso!");
+        response.put("dataInicio", dataInicio);
+        response.put("dataFim", dataFim);
+        response.put("total", coordenadoresDto.size());
+        response.put("dados", coordenadoresDto);
+
+        return ResponseEntity.ok(response);
     }
 
     // Endpoint para listar coordenadores pela entidadeId
@@ -113,11 +148,30 @@ public class CoordenadorController {
 
     // Endpoint para listar coordenadores pelo email
     @GetMapping("buscarpeloemail")
-    public List<CoordenadorDto> buscarCoordenadoresPeloEmail(@RequestParam String email) {
+    public ResponseEntity<Map<String, Object>> buscarCoordenadoresPeloEmail(@RequestParam String email) {
         List<Coordenador> coordenadores = buscarCoordenadoresPeloEmailUseCase.execute(email);
-        return coordenadores.stream()
-                .map(coordenador -> coordenadorDtoMapper.toDto(coordenador, null)) // Converte cada coordenador para DTO sem incluir senha
-                .toList();
+        Map<String, Object> response = new HashMap<>();
+
+        // Verificar se a lista está vazia
+        if (coordenadores.isEmpty()) {
+            response.put("message", "Nenhum coordenador foi encontrado com este email.");
+            response.put("email", email);
+            response.put("total", 0);
+            response.put("dados", List.of()); // Lista vazia
+            return ResponseEntity.ok(response);
+        }
+
+        // Se encontrou coordenadores
+        List<CoordenadorDto> coordenadoresDto = coordenadores.stream()
+                .map(coordenador -> coordenadorDtoMapper.toDto(coordenador, null))
+                .toList(); // Converte cada coordenador para DTO sem incluir senha
+
+        response.put("message", "Coordenadores encontrados com sucesso!");
+        response.put("email", email);
+        response.put("total", coordenadoresDto.size());
+        response.put("dados", coordenadoresDto);
+
+        return ResponseEntity.ok(response);
     }
 
     // Endpoint para buscar coordenador pelo

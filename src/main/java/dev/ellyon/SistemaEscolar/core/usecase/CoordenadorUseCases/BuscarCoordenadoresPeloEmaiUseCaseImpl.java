@@ -1,6 +1,7 @@
 package dev.ellyon.SistemaEscolar.core.usecase.CoordenadorUseCases;
 
 import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
+import dev.ellyon.SistemaEscolar.core.exceptions.ValidacaoException;
 import dev.ellyon.SistemaEscolar.core.gateway.CoordenadorGateway;
 
 import java.util.List;
@@ -20,11 +21,11 @@ public class BuscarCoordenadoresPeloEmaiUseCaseImpl implements BuscarCoordenador
 
     private void validarEmail(String email) {
         if (email == null || email.trim().isEmpty()) {
-            throw new IllegalArgumentException("O email não pode ser nulo ou vazio.");
+            throw new ValidacaoException("O email não pode ser nulo ou vazio.");
         }
 
         if (!email.contains("@") || !email.contains(".")) {
-            throw new IllegalArgumentException("O email fornecido é inválido.");
+            throw new ValidacaoException("O email fornecido é inválido.");
         }
     }
 }

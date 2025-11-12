@@ -14,14 +14,19 @@ public interface CoordenadorGateway {
 }*/
 
 public interface CoordenadorGateway {
+    // CRUD - coordenador
     Coordenador criarCoordenador(Coordenador coordenador, String email, String senha, Long entidadeId);
     Coordenador editarCoordenador(Long id, Coordenador coordenadorAtualizado, String email, String senha);
     void deletarCoordenador(Long id);
     Coordenador buscarCoordenadorPeloId(Long id);
     List<Coordenador> buscarTodosCoordenadores();
+
+    // Queries - coordenador
     List<Coordenador> buscarCoordenadoresPeloNome(String nome);
     List<Coordenador> buscarCoordenadoresEntreDatas(LocalDateTime dataInicio, LocalDateTime dataFim);
     List<Coordenador> buscarCoordenadoresPelaEntidadeId(Long entidadeId);
     List<Coordenador> buscarCoordenadoresPeloEmail(String email);
+
+    // Exception - infra
     boolean isCoordenadorExistentePorEmail(String email);
 }

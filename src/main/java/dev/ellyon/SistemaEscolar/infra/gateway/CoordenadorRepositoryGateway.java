@@ -3,6 +3,7 @@ package dev.ellyon.SistemaEscolar.infra.gateway;
 import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
 import dev.ellyon.SistemaEscolar.core.enums.RoleEnum;
 import dev.ellyon.SistemaEscolar.core.gateway.CoordenadorGateway;
+import dev.ellyon.SistemaEscolar.infra.exceptions.CoordenadorNaoEncontradoException;
 import dev.ellyon.SistemaEscolar.infra.mapper.CoordenadorEntityMapper;
 import dev.ellyon.SistemaEscolar.infra.persistence.CoordenadorEntity;
 import dev.ellyon.SistemaEscolar.infra.persistence.CoordenadorRepository;
@@ -28,6 +29,12 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
         this.coordenadorRepository = coordenadorRepository;
         this.usuarioRepository = usuarioRepository;
         this.coordenadorEntityMapper = coordenadorEntityMapper;
+    }
+
+    // Verifica se já existe um coordenador com o email fornecido ao criar ou editar
+    @Override
+    public boolean isCoordenadorExistentePorEmail(String email) {
+        return coordenadorRepository.findAll().stream().anyMatch(coordenador -> coordenador.getUsuario().getEmail().equalsIgnoreCase(email));
     }
 
     @Override
@@ -60,12 +67,6 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
     @Override
     public List<Coordenador> buscarTodosCoordenadores() {
         return coordenadorRepository.findAll().stream().map(coordenadorEntityMapper::toDomainWithUsuario).toList();
-    }
-
-    // Verifica se já existe um coordenador com o email fornecido ao criar ou editar
-    @Override
-    public boolean isCoordenadorExistentePorEmail(String email) {
-        return coordenadorRepository.findAll().stream().anyMatch(coordenador -> coordenador.getUsuario().getEmail().equalsIgnoreCase(email));
     }
 
     @Override
@@ -154,7 +155,7 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
     @Override
     public Coordenador buscarCoordenadorPeloId(Long id) {
         CoordenadorEntity coordenadorEntity = coordenadorRepository.findByIdWithUsuario(id)
-                .orElseThrow(() -> new RuntimeException("Coordenador não encontrado com ID: " + id));
+                .orElseThrow(() -> new CoordenadorNaoEncontradoException(id));
 
         return coordenadorEntityMapper.toDomainWithUsuario(coordenadorEntity);
     }

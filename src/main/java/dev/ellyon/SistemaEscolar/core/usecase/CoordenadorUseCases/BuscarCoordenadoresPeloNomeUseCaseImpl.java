@@ -1,6 +1,7 @@
 package dev.ellyon.SistemaEscolar.core.usecase.CoordenadorUseCases;
 
 import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
+import dev.ellyon.SistemaEscolar.core.exceptions.ValidacaoException;
 import dev.ellyon.SistemaEscolar.core.gateway.CoordenadorGateway;
 
 import java.util.List;
@@ -20,11 +21,11 @@ public class BuscarCoordenadoresPeloNomeUseCaseImpl implements BuscarCoordenador
 
     private void validarNome(String nome) {
         if (nome == null || nome.trim().isEmpty()) {
-            throw new IllegalArgumentException("O nome não pode ser nulo ou vazio.");
+            throw new ValidacaoException("O nome não pode ser nulo ou vazio.");
         }
 
         if (nome.trim().length() < 2) {
-            throw new IllegalArgumentException("O nome deve ter no mínimo 2 caracteres.");
+            throw new ValidacaoException("O nome deve ter no mínimo 2 caracteres.");
         }
     }
 }
