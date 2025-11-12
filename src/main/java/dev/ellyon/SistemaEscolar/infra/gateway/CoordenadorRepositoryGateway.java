@@ -3,7 +3,7 @@ package dev.ellyon.SistemaEscolar.infra.gateway;
 import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
 import dev.ellyon.SistemaEscolar.core.enums.RoleEnum;
 import dev.ellyon.SistemaEscolar.core.gateway.CoordenadorGateway;
-import dev.ellyon.SistemaEscolar.infra.exceptions.CoordenadorNaoEncontradoException;
+import dev.ellyon.SistemaEscolar.infra.exceptions.CoordenadorNaoEncontradoPeloIdException;
 import dev.ellyon.SistemaEscolar.infra.mapper.CoordenadorEntityMapper;
 import dev.ellyon.SistemaEscolar.infra.persistence.CoordenadorEntity;
 import dev.ellyon.SistemaEscolar.infra.persistence.CoordenadorRepository;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class CoordenadorRepositoryGateway implements CoordenadorGateway {
@@ -37,6 +36,12 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
         return coordenadorRepository.findAll().stream().anyMatch(coordenador -> coordenador.getUsuario().getEmail().equalsIgnoreCase(email));
     }
 
+    // Verifica se já existe um coordenador com o id fornecido ao criar ou editar
+    @Override
+    public boolean isCoordenadorExistentePorId(Long id) {
+        return coordenadorRepository.findAll().stream().anyMatch(coordenador -> coordenador.getIdCoordenador().equals(id));
+    }
+
     @Override
     @Transactional
     public Coordenador criarCoordenador(Coordenador coordenador, String email, String senha, Long entidadeId) {
@@ -46,7 +51,7 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
         usuario.setSenha(senha);
         usuario.setEntidadeId(entidadeId);
         usuario.setRole(RoleEnum.COORDENADOR);
-        //usuario.setCriadoEm(LocalDateTime.now());
+        usuario.setCriadoEm(LocalDateTime.now());
         usuario.setAtualizadoEm(LocalDateTime.now());
 
         UsuarioEntity usuarioSalvo = usuarioRepository.save(usuario);
@@ -56,8 +61,8 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
         coordenadorEntity.setNome(coordenador.getNome());
         coordenadorEntity.setSobrenome(coordenador.getSobrenome());
         coordenadorEntity.setIdUsuario(usuarioSalvo.getIdUsuario());
-        // coordenadorEntity.setCriadoEm(LocalDateTime.now());
-        //coordenadorEntity.setAtualizadoEm(LocalDateTime.now());
+        coordenadorEntity.setCriadoEm(LocalDateTime.now());
+        coordenadorEntity.setAtualizadoEm(LocalDateTime.now());
 
         CoordenadorEntity novoCoordenador = coordenadorRepository.save(coordenadorEntity);
 
@@ -155,7 +160,7 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
     @Override
     public Coordenador buscarCoordenadorPeloId(Long id) {
         CoordenadorEntity coordenadorEntity = coordenadorRepository.findByIdWithUsuario(id)
-                .orElseThrow(() -> new CoordenadorNaoEncontradoException(id));
+                .orElseThrow(() -> new CoordenadorNaoEncontradoPeloIdException(id));
 
         return coordenadorEntityMapper.toDomainWithUsuario(coordenadorEntity);
     }

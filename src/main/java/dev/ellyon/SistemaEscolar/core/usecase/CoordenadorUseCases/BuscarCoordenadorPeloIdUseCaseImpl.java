@@ -1,6 +1,7 @@
 package dev.ellyon.SistemaEscolar.core.usecase.CoordenadorUseCases;
 
 import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
+import dev.ellyon.SistemaEscolar.core.exceptions.ValidacaoException;
 import dev.ellyon.SistemaEscolar.core.gateway.CoordenadorGateway;
 
 import java.util.List;
@@ -15,10 +16,17 @@ public class BuscarCoordenadorPeloIdUseCaseImpl implements BuscarCoordenadorPelo
 
     @Override
     public Coordenador execute(Long id) {
-        if (id == null || id <= 0) {
-            throw new IllegalArgumentException("ID inválido");
+        validarId(id);
+        return coordenadorGateway.buscarCoordenadorPeloId(id);
+    }
+
+    private void validarId(Long id) {
+        if (id == null) {
+            throw new ValidacaoException("O ID não pode ser nulo.");
         }
 
-        return coordenadorGateway.buscarCoordenadorPeloId(id);
+        if (id <= 0) {
+            throw new ValidacaoException("O ID deve ser um número positivo.");
+        }
     }
 }

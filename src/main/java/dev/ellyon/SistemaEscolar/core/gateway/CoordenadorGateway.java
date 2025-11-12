@@ -29,4 +29,5 @@ public interface CoordenadorGateway {
 
     // Exception - infra
     boolean isCoordenadorExistentePorEmail(String email);
+    boolean isCoordenadorExistentePorId(Long id);
 }

@@ -13,8 +13,16 @@ public class ControllerExceptionsHandler extends RuntimeException{
     @ExceptionHandler(DuplicateCoordenadorEmailException.class)
     public ResponseEntity<Map<String, String>> handleDuplicateEmailException(DuplicateCoordenadorEmailException ex) {
         Map<String, String> response = new HashMap<>();
-        response.put("Error", ex.getMessage());
-        response.put("Message:", "Já existe um coordenador com o email fornecido. Por favor insira outro email.");
+        response.put("error", ex.getMessage());
+        response.put("message:", "Já existe um coordenador com o email fornecido. Por favor insira outro email.");
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(DuplicateCoordenadorIdException.class)
+    public ResponseEntity<Map<String, String>> handleDuplicateIdException(DuplicateCoordenadorIdException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("error", ex.getMessage());
+        response.put("message:", "Já existe um coordenador com o ID gerado. Favor tentar novamente ou contacte o suporte.");
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 }

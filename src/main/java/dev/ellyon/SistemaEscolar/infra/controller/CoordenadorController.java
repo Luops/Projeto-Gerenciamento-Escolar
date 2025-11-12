@@ -5,7 +5,6 @@ import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
 import dev.ellyon.SistemaEscolar.core.usecase.CoordenadorUseCases.*;
 import dev.ellyon.SistemaEscolar.infra.dtos.CoordenadorDto;
 import dev.ellyon.SistemaEscolar.infra.mapper.CoordenadorDtoMapper;
-import jakarta.websocket.OnClose;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/coordenador/")
@@ -31,8 +29,6 @@ public class CoordenadorController {
     private final DeletarCoordenadorUseCase deletarCoordenadorUseCase;
 
     // Constructor Injection
-
-
     public CoordenadorController(CriarCoordenadorUseCase criarCoordenadorUseCase, CoordenadorDtoMapper coordenadorDtoMapper, BuscarTodosCoordenadoresUseCase buscarCoordenadorUseCase, BuscarCoordenadoresPeloNomeUseCase buscarCoordenadoresPeloNomeUseCase, BuscarCoordenadoresEntreDatasUseCase buscarCoordenadoresEntreDatasUseCaseUseCase, BuscarCoordenadorPelaEntidadeIdUseCase buscarCoordenadorPelaEntidadeIdUseCase, BuscarCoordenadoresPeloEmailUseCase buscarCoordenadoresPeloEmailUseCase, BuscarCoordenadorPeloIdUseCase buscarCoordenadorPeloId, EditarCoordenadorUseCase editarCoordenadorUseCase, DeletarCoordenadorUseCase deletarCoordenadorUseCase) {
         this.criarCoordenadorUseCase = criarCoordenadorUseCase;
         this.coordenadorDtoMapper = coordenadorDtoMapper;
@@ -76,11 +72,25 @@ public class CoordenadorController {
 
     // Endpoint para listar coordenadores
     @GetMapping("buscartodos")
-    public List<CoordenadorDto> buscarTodosCoordenadores() {
+    public ResponseEntity<Map<String, Object>>buscarTodosCoordenadores() {
         List<Coordenador> coordenadores = buscarCoordenadorUseCase.execute();
-        return coordenadores.stream()
+        Map<String, Object> response = new HashMap<>();
+        // Verificar se a lista está vazia
+        if (coordenadores.isEmpty()) {
+            response.put("message", "Nenhum coordenador foi encontrado com este nome.");
+            response.put("total", 0);
+            response.put("dados", List.of()); // Lista vazia
+            return ResponseEntity.ok(response);
+        }
+
+        List<CoordenadorDto> coordenadoresDto = coordenadores.stream()
                 .map(coordenador -> coordenadorDtoMapper.toDto(coordenador, null)) // Converte cada coordenador para DTO sem incluir senha
                 .toList();
+        response.put("message", "Coordenadores encontrados com sucesso!");
+        response.put("total", coordenadoresDto.size());
+        response.put("dados", coordenadoresDto);
+
+        return ResponseEntity.ok(response);
     }
 
     // Endpoint para listar coordenadores pelo nome
@@ -178,27 +188,15 @@ public class CoordenadorController {
     @GetMapping("buscarpeloid/{id}")
     public ResponseEntity<Map<String, Object>> buscarPeloId(
             @PathVariable Long id) {
-        try {
             Coordenador coordenador = buscarCoordenadorPeloId.execute(id);
 
             CoordenadorDto resposta = coordenadorDtoMapper.toDto(coordenador, null);
 
             Map<String, Object> response = new HashMap<>();
-            response.put("Message", "Coordenador encontrado!");
-            response.put("Dados do Coordenador", resposta);
+            response.put("message", "Coordenador encontrado!");
+            response.put("dados", resposta);
 
             return ResponseEntity.ok(response);
-
-        } catch (IllegalArgumentException e) {
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("Error", e.getMessage());
-            return ResponseEntity.badRequest().body(errorResponse);
-
-        } catch (RuntimeException e) {
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("Error", e.getMessage());
-            return ResponseEntity.status(404).body(errorResponse);
-        }
     }
 
     // Endpoint para editar coordenador
