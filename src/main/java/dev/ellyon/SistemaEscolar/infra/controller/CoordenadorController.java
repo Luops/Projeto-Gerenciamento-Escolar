@@ -27,9 +27,10 @@ public class CoordenadorController {
     private final BuscarCoordenadorPeloIdUseCase buscarCoordenadorPeloId;
     private final EditarCoordenadorUseCase editarCoordenadorUseCase;
     private final DeletarCoordenadorUseCase deletarCoordenadorUseCase;
+    private final ContarTotalCoordenadoresUseCase contarTotalCoordenadoresUseCase;
 
     // Constructor Injection
-    public CoordenadorController(CriarCoordenadorUseCase criarCoordenadorUseCase, CoordenadorDtoMapper coordenadorDtoMapper, BuscarTodosCoordenadoresUseCase buscarCoordenadorUseCase, BuscarCoordenadoresPeloNomeUseCase buscarCoordenadoresPeloNomeUseCase, BuscarCoordenadoresEntreDatasUseCase buscarCoordenadoresEntreDatasUseCaseUseCase, BuscarCoordenadorPelaEntidadeIdUseCase buscarCoordenadorPelaEntidadeIdUseCase, BuscarCoordenadoresPeloEmailUseCase buscarCoordenadoresPeloEmailUseCase, BuscarCoordenadorPeloIdUseCase buscarCoordenadorPeloId, EditarCoordenadorUseCase editarCoordenadorUseCase, DeletarCoordenadorUseCase deletarCoordenadorUseCase) {
+    public CoordenadorController(CriarCoordenadorUseCase criarCoordenadorUseCase, CoordenadorDtoMapper coordenadorDtoMapper, BuscarTodosCoordenadoresUseCase buscarCoordenadorUseCase, BuscarCoordenadoresPeloNomeUseCase buscarCoordenadoresPeloNomeUseCase, BuscarCoordenadoresEntreDatasUseCase buscarCoordenadoresEntreDatasUseCaseUseCase, BuscarCoordenadorPelaEntidadeIdUseCase buscarCoordenadorPelaEntidadeIdUseCase, BuscarCoordenadoresPeloEmailUseCase buscarCoordenadoresPeloEmailUseCase, BuscarCoordenadorPeloIdUseCase buscarCoordenadorPeloId, EditarCoordenadorUseCase editarCoordenadorUseCase, DeletarCoordenadorUseCase deletarCoordenadorUseCase, ContarTotalCoordenadoresUseCase contarTotalCoordenadoresUseCase) {
         this.criarCoordenadorUseCase = criarCoordenadorUseCase;
         this.coordenadorDtoMapper = coordenadorDtoMapper;
         this.buscarCoordenadorUseCase = buscarCoordenadorUseCase;
@@ -40,6 +41,7 @@ public class CoordenadorController {
         this.buscarCoordenadorPeloId = buscarCoordenadorPeloId;
         this.editarCoordenadorUseCase = editarCoordenadorUseCase;
         this.deletarCoordenadorUseCase = deletarCoordenadorUseCase;
+        this.contarTotalCoordenadoresUseCase = contarTotalCoordenadoresUseCase;
     }
 
     @PostMapping("criar")
@@ -252,11 +254,22 @@ public class CoordenadorController {
     @DeleteMapping("deletar/{id}")
     public ResponseEntity<Map<String, Object>> deletarCoordenador(@PathVariable Long id) {
         try {
+            // Buscar coordenador antes de deletar para pegar os dados
+            Coordenador coordenadorDeletado = buscarCoordenadorPeloId.execute(id);
+
             deletarCoordenadorUseCase.execute(id);
 
+            // Contar total após deleção
+            long totalCoordenadores = contarTotalCoordenadoresUseCase.execute();
+
             Map<String, Object> response = new HashMap<>();
-            response.put("Message", "Coordenador deletado com sucesso!");
-            response.put("ID deletado", id);
+            response.put("message", "Coordenador deletado com sucesso!");
+            response.put("coordenadorDeletado", Map.of(
+                    "id", id,
+                    "nome", coordenadorDeletado.getNome() + " " + coordenadorDeletado.getSobrenome(),
+                    "email", coordenadorDeletado.getEmail()
+            ));
+            response.put("total de Coordenadores: ", totalCoordenadores);
 
             return ResponseEntity.ok(response);
 

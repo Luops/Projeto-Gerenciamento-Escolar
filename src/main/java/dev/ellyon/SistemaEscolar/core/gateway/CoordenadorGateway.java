@@ -26,6 +26,7 @@ public interface CoordenadorGateway {
     List<Coordenador> buscarCoordenadoresEntreDatas(LocalDateTime dataInicio, LocalDateTime dataFim);
     List<Coordenador> buscarCoordenadoresPelaEntidadeId(Long entidadeId);
     List<Coordenador> buscarCoordenadoresPeloEmail(String email);
+    long contarTotalCoodenadores();
 
     // Exception - infra
     boolean isCoordenadorExistentePorEmail(String email);

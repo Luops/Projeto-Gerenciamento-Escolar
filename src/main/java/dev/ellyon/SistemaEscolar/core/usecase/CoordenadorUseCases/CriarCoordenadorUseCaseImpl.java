@@ -5,18 +5,6 @@ import dev.ellyon.SistemaEscolar.core.gateway.CoordenadorGateway;
 import dev.ellyon.SistemaEscolar.infra.exceptions.DuplicateCoordenadorEmailException;
 import dev.ellyon.SistemaEscolar.infra.exceptions.DuplicateCoordenadorIdException;
 
-/*
-public class CriarCoordenadorUseCaseImpl implements CriarCoordenadorUseCase{
-    private final CoordenadorGateway coordenadorGateway; // Gateway para operações de coordenador
-    public CriarCoordenadorUseCaseImpl(CoordenadorGateway coordenadorGateway) {
-        this.coordenadorGateway = coordenadorGateway;
-    }
-
-    @Override
-    public Coordenador execute(Coordenador coordenador) {
-        return coordenadorGateway.criarCoordenador(coordenador);
-    }
-}*/
 public class CriarCoordenadorUseCaseImpl implements CriarCoordenadorUseCase {
     private final CoordenadorGateway coordenadorGateway;
 
@@ -26,6 +14,11 @@ public class CriarCoordenadorUseCaseImpl implements CriarCoordenadorUseCase {
 
     @Override
     public Coordenador execute(Coordenador coordenador, String email, String senha, Long entidadeId) {
+        validar(coordenador, email, senha, entidadeId);
+        return coordenadorGateway.criarCoordenador(coordenador, email, senha, entidadeId);
+    }
+
+    private void validar(Coordenador coordenador, String email, String senha, Long entidadeId){
         // Validar campos preenchidos
         if(coordenador.getNome() == null || coordenador.getNome().isEmpty()) {
             throw new IllegalArgumentException("O nome do coordenador é obrigatório.");
@@ -35,6 +28,9 @@ public class CriarCoordenadorUseCaseImpl implements CriarCoordenadorUseCase {
         }
         if (email == null || email.isEmpty()){
             throw new IllegalArgumentException("O email é obrigatório.");
+        }
+        if( !email.contains("@") || !email.contains(".")){
+            throw new IllegalArgumentException("O email fornecido é inválido.");
         }
         if (senha == null || senha.isEmpty()){
             throw new IllegalArgumentException("A senha é obrigatório.");
@@ -50,7 +46,6 @@ public class CriarCoordenadorUseCaseImpl implements CriarCoordenadorUseCase {
         if(coordenadorGateway.isCoordenadorExistentePorEmail(email)) {
             throw new DuplicateCoordenadorEmailException("Já existe um coordenador com o email fornecido." + email);
         }
-        return coordenadorGateway.criarCoordenador(coordenador, email, senha, entidadeId);
     }
 
 }

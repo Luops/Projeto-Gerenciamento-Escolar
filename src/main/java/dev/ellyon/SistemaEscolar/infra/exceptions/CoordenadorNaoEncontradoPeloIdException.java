@@ -6,6 +6,6 @@ package dev.ellyon.SistemaEscolar.infra.exceptions;
 
 public class CoordenadorNaoEncontradoPeloIdException extends RuntimeException{
     public CoordenadorNaoEncontradoPeloIdException(Long id) {
-        super("Coordenador não encontrado com ID: " + id);
+        super("Coordenador com o ID " + id + " não foi encontrado.");
     }
 }

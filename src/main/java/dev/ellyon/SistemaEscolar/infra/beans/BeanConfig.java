@@ -52,4 +52,9 @@ public class BeanConfig {
     @Bean public DeletarCoordenadorUseCase deletarCoordenadorUseCase(CoordenadorGateway coordenadorGateway){
         return new DeletarCoordenadorUseCaseImpl(coordenadorGateway);
     }
+
+    @Bean
+    public ContarTotalCoordenadoresUseCase contarTotalCoordenadoresUseCase(CoordenadorGateway coordenadorGateway) {
+        return new ContarTotalCoordenadoresUseCaseImpl(coordenadorGateway);
+    }
 }

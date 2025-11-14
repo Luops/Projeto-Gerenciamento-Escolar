@@ -12,11 +12,14 @@ public class DeletarCoordenadorUseCaseImpl implements DeletarCoordenadorUseCase 
 
     @Override
     public Coordenador execute(Long id) {
+        validar(id);
+        coordenadorGateway.deletarCoordenador(id);
+        return null;
+    }
+
+    private void validar(Long id){
         if (id == null || id <= 0) {
             throw new IllegalArgumentException("ID inválido");
         }
-
-        coordenadorGateway.deletarCoordenador(id);
-        return null;
     }
 }

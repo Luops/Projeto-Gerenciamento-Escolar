@@ -103,14 +103,7 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
     public Coordenador editarCoordenador(Long id, Coordenador coordenadorAtualizado, String email, String senha) {
         // 1. Buscar coordenador existente
         CoordenadorEntity coordenadorExistente = coordenadorRepository.findByIdWithUsuario(id)
-                .orElseThrow(() -> new RuntimeException("Coordenador não encontrado com ID: " + id));
-
-        // LOG ANTES
-        System.out.println("=== ANTES DA EDIÇÃO ===");
-        System.out.println("Coordenador criadoEm: " + coordenadorExistente.getCriadoEm());
-        System.out.println("Coordenador atualizadoEm: " + coordenadorExistente.getAtualizadoEm());
-        System.out.println("Usuario criadoEm: " + coordenadorExistente.getUsuario().getCriadoEm());
-        System.out.println("Usuario atualizadoEm: " + coordenadorExistente.getUsuario().getAtualizadoEm());
+                .orElseThrow(() -> new CoordenadorNaoEncontradoPeloIdException(id));
 
         // 2. Atualizar dados do Coordenador
         coordenadorExistente.setNome(coordenadorAtualizado.getNome());
@@ -170,7 +163,7 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
     public void deletarCoordenador(Long id) {
         // 1. Buscar coordenador para garantir que existe
         CoordenadorEntity coordenador = coordenadorRepository.findByIdWithUsuario(id)
-                .orElseThrow(() -> new RuntimeException("Coordenador não encontrado com ID: " + id));
+                .orElseThrow(() -> new CoordenadorNaoEncontradoPeloIdException(id));
 
         // 2. Guardar o ID do usuario
         Long idUsuario = coordenador.getIdUsuario();
@@ -180,5 +173,10 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
 
         // 4. Deletar usuario depois
         usuarioRepository.deleteById(idUsuario);
+    }
+
+    @Override
+    public long contarTotalCoodenadores() {
+        return coordenadorRepository.count();
     }
 }

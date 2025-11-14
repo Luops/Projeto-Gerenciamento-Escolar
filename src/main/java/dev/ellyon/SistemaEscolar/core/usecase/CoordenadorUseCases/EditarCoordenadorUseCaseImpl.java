@@ -25,13 +25,29 @@ public class EditarCoordenadorUseCaseImpl implements EditarCoordenadorUseCase {
 
     @Override
     public Coordenador execute(Long id, Coordenador coordenadorAtualizado, String email, String senha) {
+        validar(id, coordenadorAtualizado, email, senha);
+        return coordenadorGateway.editarCoordenador(id, coordenadorAtualizado, email, senha);
+    }
+
+    private void validar(Long id, Coordenador coordenadorAtualizado, String email, String senha){
         // Validacoes
+        if(id == null || id <= 0) {
+            throw new IllegalArgumentException("ID inválido.");
+        }
         if (coordenadorAtualizado.getNome() == null || coordenadorAtualizado.getNome().isBlank()) {
-            throw new IllegalArgumentException("Nome não pode ser vazio");
+            throw new IllegalArgumentException("Nome é obrigatório.");
         }
         if (coordenadorAtualizado.getSobrenome() == null || coordenadorAtualizado.getSobrenome().isBlank()) {
-            throw new IllegalArgumentException("Sobrenome não pode ser vazio");
+            throw new IllegalArgumentException("Sobrenome é obrigatório.");
         }
-        return coordenadorGateway.editarCoordenador(id, coordenadorAtualizado, email, senha);
+        if (email == null || email.isEmpty()){
+            throw new IllegalArgumentException("O email é obrigatório.");
+        }
+        if( !email.contains("@") || !email.contains(".")){
+            throw new IllegalArgumentException("O email fornecido é inválido.");
+        }
+        if (senha == null || senha.isBlank()) {
+            throw new IllegalArgumentException("A senha é obrigatória.");
+        }
     }
 }
