@@ -1,4 +1,4 @@
-package dev.ellyon.SistemaEscolar.infra.exceptions;
+package dev.ellyon.SistemaEscolar.infra.exceptions.Coordenador;
 
 public class DuplicateCoordenadorEmailException extends RuntimeException{
     public DuplicateCoordenadorEmailException(String message) {

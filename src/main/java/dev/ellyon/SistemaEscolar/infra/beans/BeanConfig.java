@@ -3,6 +3,8 @@ package dev.ellyon.SistemaEscolar.infra.beans;
 import dev.ellyon.SistemaEscolar.core.gateway.CoordenadorGateway;
 import dev.ellyon.SistemaEscolar.core.gateway.MateriaGateway;
 import dev.ellyon.SistemaEscolar.core.usecase.CoordenadorUseCases.*;
+import dev.ellyon.SistemaEscolar.core.usecase.MateriaUseCases.BuscarTodasMateriasUseCase;
+import dev.ellyon.SistemaEscolar.core.usecase.MateriaUseCases.BuscarTodasMateriasUseCaseImpl;
 import dev.ellyon.SistemaEscolar.core.usecase.MateriaUseCases.CriarMateriaUseCase;
 import dev.ellyon.SistemaEscolar.core.usecase.MateriaUseCases.CriarMateriaUseCaseImpl;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +25,9 @@ public class BeanConfig {
         return new CriarMateriaUseCaseImpl(materiaGateway);
     }
 
+    /*
+     * Config para Coordenador
+     */
     @Bean
     public BuscarTodosCoordenadoresUseCase buscarTodosCoordenadores(CoordenadorGateway coordenadorGateway) {
         return new BuscarTodosCoordenadoresUseCaseImpl(coordenadorGateway);
@@ -66,4 +71,13 @@ public class BeanConfig {
     public ContarTotalCoordenadoresUseCase contarTotalCoordenadoresUseCase(CoordenadorGateway coordenadorGateway) {
         return new ContarTotalCoordenadoresUseCaseImpl(coordenadorGateway);
     }
+
+    /*
+    * Config para Materia
+    */
+    @Bean
+    public BuscarTodasMateriasUseCase buscarTodasMateriasUseCase(MateriaGateway materiaGateway) {
+        return new BuscarTodasMateriasUseCaseImpl(materiaGateway);
+    }
+
 }

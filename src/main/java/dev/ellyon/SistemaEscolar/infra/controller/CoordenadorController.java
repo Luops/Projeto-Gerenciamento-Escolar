@@ -44,6 +44,29 @@ public class CoordenadorController {
         this.contarTotalCoordenadoresUseCase = contarTotalCoordenadoresUseCase;
     }
 
+    // Endpoint para listar coordenadores
+    @GetMapping("buscartodos")
+    public ResponseEntity<Map<String, Object>>buscarTodosCoordenadores() {
+        List<Coordenador> coordenadores = buscarCoordenadorUseCase.execute();
+        Map<String, Object> response = new HashMap<>();
+        // Verificar se a lista está vazia
+        if (coordenadores.isEmpty()) {
+            response.put("message", "Nenhum coordenador foi encontrado.");
+            response.put("total", 0);
+            response.put("dados", List.of()); // Lista vazia
+            return ResponseEntity.ok(response);
+        }
+
+        List<CoordenadorDto> coordenadoresDto = coordenadores.stream()
+                .map(coordenador -> coordenadorDtoMapper.toDto(coordenador, null)) // Converte cada coordenador para DTO sem incluir senha
+                .toList();
+        response.put("message", "Coordenadores encontrados com sucesso!");
+        response.put("total", coordenadoresDto.size());
+        response.put("dados", coordenadoresDto);
+
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("criar")
     public ResponseEntity<Map<String, Object>> criarCoordenador(@RequestBody CoordenadorDto coordenadorDto) {
         Coordenador coordenadorDominio = coordenadorDtoMapper.toDomain(coordenadorDto);
@@ -69,29 +92,6 @@ public class CoordenadorController {
         Map<String, Object> response = new HashMap<>();
         response.put("message: ", "Coordenador criado com sucesso!");
         response.put("dados do Coordenador: ", resposta);
-        return ResponseEntity.ok(response);
-    }
-
-    // Endpoint para listar coordenadores
-    @GetMapping("buscartodos")
-    public ResponseEntity<Map<String, Object>>buscarTodosCoordenadores() {
-        List<Coordenador> coordenadores = buscarCoordenadorUseCase.execute();
-        Map<String, Object> response = new HashMap<>();
-        // Verificar se a lista está vazia
-        if (coordenadores.isEmpty()) {
-            response.put("message", "Nenhum coordenador foi encontrado com este nome.");
-            response.put("total", 0);
-            response.put("dados", List.of()); // Lista vazia
-            return ResponseEntity.ok(response);
-        }
-
-        List<CoordenadorDto> coordenadoresDto = coordenadores.stream()
-                .map(coordenador -> coordenadorDtoMapper.toDto(coordenador, null)) // Converte cada coordenador para DTO sem incluir senha
-                .toList();
-        response.put("message", "Coordenadores encontrados com sucesso!");
-        response.put("total", coordenadoresDto.size());
-        response.put("dados", coordenadoresDto);
-
         return ResponseEntity.ok(response);
     }
 

@@ -1,5 +1,9 @@
 package dev.ellyon.SistemaEscolar.infra.exceptions;
 
+import dev.ellyon.SistemaEscolar.infra.exceptions.Coordenador.CoordenadorNaoEncontradoPeloIdException;
+import dev.ellyon.SistemaEscolar.infra.exceptions.Coordenador.DuplicateCoordenadorEmailException;
+import dev.ellyon.SistemaEscolar.infra.exceptions.Coordenador.DuplicateCoordenadorIdException;
+import dev.ellyon.SistemaEscolar.infra.exceptions.Materia.MateriaNaoEncontradaPeloIdException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -31,6 +35,14 @@ public class ControllerExceptionsHandler extends RuntimeException{
         Map<String, String> response = new HashMap<>();
         response.put("error", ex.getMessage());
         response.put("message:", "O coordenador com o ID fornecido não foi encontrado no sistema.");
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MateriaNaoEncontradaPeloIdException.class)
+    public ResponseEntity<Map<String, String>> handleMateriaNaoEncontradaPeloIdException(RuntimeException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("error", ex.getMessage());
+        response.put("message:", "A materia com o ID fornecido não foi encontrada no sistema.");
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }

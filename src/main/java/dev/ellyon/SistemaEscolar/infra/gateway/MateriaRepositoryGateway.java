@@ -8,6 +8,7 @@ import dev.ellyon.SistemaEscolar.infra.persistence.MateriaRepository;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 public class MateriaRepositoryGateway implements MateriaGateway {
@@ -22,10 +23,15 @@ public class MateriaRepositoryGateway implements MateriaGateway {
     @Override
     public Materia criarMateria(Materia materia) {
         MateriaEntity novaMateria = new MateriaEntity();
-        novaMateria.setNome(materia.getNome());
+        novaMateria.setNome(materia.getNome().toUpperCase());
         novaMateria.setCriadoEm(LocalDateTime.now());
         novaMateria.setAtualizadoEm(LocalDateTime.now());
         MateriaEntity materiaSalva = materiaRepository.save(novaMateria);
         return materiaEntityMapper.toDomain(materiaSalva);
+    }
+
+    @Override
+    public List<Materia> buscarTodasMaterias() {
+        return materiaRepository.findAll().stream().map(materiaEntityMapper::toDomain).toList();
     }
 }

@@ -2,8 +2,8 @@ package dev.ellyon.SistemaEscolar.core.usecase.CoordenadorUseCases;
 
 import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
 import dev.ellyon.SistemaEscolar.core.gateway.CoordenadorGateway;
-import dev.ellyon.SistemaEscolar.infra.exceptions.DuplicateCoordenadorEmailException;
-import dev.ellyon.SistemaEscolar.infra.exceptions.DuplicateCoordenadorIdException;
+import dev.ellyon.SistemaEscolar.infra.exceptions.Coordenador.DuplicateCoordenadorEmailException;
+import dev.ellyon.SistemaEscolar.infra.exceptions.Coordenador.DuplicateCoordenadorIdException;
 
 public class CriarCoordenadorUseCaseImpl implements CriarCoordenadorUseCase {
     private final CoordenadorGateway coordenadorGateway;

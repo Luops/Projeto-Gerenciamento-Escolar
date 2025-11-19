@@ -1,4 +1,4 @@
-package dev.ellyon.SistemaEscolar.infra.exceptions;
+package dev.ellyon.SistemaEscolar.infra.exceptions.Coordenador;
 
 /**
  * Exceção lançada quando um coordenador ESPECÍFICO não é encontrado.
