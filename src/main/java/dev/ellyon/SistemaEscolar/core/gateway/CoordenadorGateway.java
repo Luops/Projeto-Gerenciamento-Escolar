@@ -6,12 +6,6 @@ import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-/*
-public interface CoordenadorGateway {
-    // Método para criar um coordenador
-    Coordenador criarCoordenador(Coordenador coordenador);
-
-}*/
 
 public interface CoordenadorGateway {
     // CRUD - coordenador

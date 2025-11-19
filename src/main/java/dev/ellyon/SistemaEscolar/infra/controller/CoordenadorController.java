@@ -67,8 +67,8 @@ public class CoordenadorController {
         resposta.setAtualizadoEm(novoCoordenador.getAtualizadoEm());
 
         Map<String, Object> response = new HashMap<>();
-        response.put("Message: ", "Coordenador criado com sucesso!");
-        response.put("Dados do Coordenador: ", resposta);
+        response.put("message: ", "Coordenador criado com sucesso!");
+        response.put("dados do Coordenador: ", resposta);
         return ResponseEntity.ok(response);
     }
 

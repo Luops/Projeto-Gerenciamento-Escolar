@@ -7,29 +7,6 @@ import dev.ellyon.SistemaEscolar.infra.persistence.UsuarioEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-/*
-@Component
-public class CoordenadorDtoMapper {
-    public CoordenadorDto toDto(Coordenador coordenador){
-        return new CoordenadorDto(
-                coordenador.getId(),
-                coordenador.getNome(),
-                coordenador.getCriadoEm(),
-                coordenador.getAtualizadoEm(),
-                coordenador.getSobrenome()
-        );
-    }
-
-    public Coordenador toDomain(CoordenadorDto coordenadorDto){
-        return new Coordenador(
-                coordenadorDto.getId(),
-                coordenadorDto.getNome(),
-                coordenadorDto.getCriadoEm(),
-                coordenadorDto.getAtualizadoEm(),
-                coordenadorDto.getSobrenome()
-        );
-    }
-}*/
 
 @Component
 public class CoordenadorDtoMapper {

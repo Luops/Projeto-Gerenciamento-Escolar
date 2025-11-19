@@ -1,7 +1,10 @@
 package dev.ellyon.SistemaEscolar.infra.beans;
 
 import dev.ellyon.SistemaEscolar.core.gateway.CoordenadorGateway;
+import dev.ellyon.SistemaEscolar.core.gateway.MateriaGateway;
 import dev.ellyon.SistemaEscolar.core.usecase.CoordenadorUseCases.*;
+import dev.ellyon.SistemaEscolar.core.usecase.MateriaUseCases.CriarMateriaUseCase;
+import dev.ellyon.SistemaEscolar.core.usecase.MateriaUseCases.CriarMateriaUseCaseImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,6 +15,12 @@ public class BeanConfig {
     @Bean
     public CriarCoordenadorUseCase criarCoordenador(CoordenadorGateway coordenadorGateway){
         return new CriarCoordenadorUseCaseImpl(coordenadorGateway);
+    }
+
+    // Define o bean para o caso de uso de criar materia
+    @Bean
+    public CriarMateriaUseCase criarMateria(MateriaGateway materiaGateway){
+        return new CriarMateriaUseCaseImpl(materiaGateway);
     }
 
     @Bean

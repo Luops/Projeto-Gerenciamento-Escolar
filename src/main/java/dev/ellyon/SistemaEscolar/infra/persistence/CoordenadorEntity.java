@@ -27,7 +27,7 @@ public class CoordenadorEntity{
     @Column(name = "atualizado_em")
     private LocalDateTime atualizadoEm;
 
-    // Opcional: relacionamento JPA
+    // Opcional: relacionamento JPA se tiver chave estrangeira
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", insertable = false, updatable = false)
     private UsuarioEntity usuario;

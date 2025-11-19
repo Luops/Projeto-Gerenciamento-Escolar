@@ -1,23 +1,9 @@
 package dev.ellyon.SistemaEscolar.infra.dtos;
 
-import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
-import dev.ellyon.SistemaEscolar.core.entities.Usuario;
-import dev.ellyon.SistemaEscolar.core.enums.RoleEnum;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.antlr.v4.runtime.misc.NotNull;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 
-/*
-public class CoordenadorDto extends Coordenador {
-    public CoordenadorDto(Long id, String nome, LocalDateTime criadoEm, LocalDateTime atualizadoEm, String sobrenome) {
-
-    }
-}*/
 public class CoordenadorDto implements Serializable {
     private Long id;
 
