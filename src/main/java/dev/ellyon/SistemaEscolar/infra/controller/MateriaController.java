@@ -4,6 +4,7 @@ import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
 import dev.ellyon.SistemaEscolar.core.entities.Materia;
 import dev.ellyon.SistemaEscolar.core.usecase.MateriaUseCases.BuscarTodasMateriasUseCase;
 import dev.ellyon.SistemaEscolar.core.usecase.MateriaUseCases.CriarMateriaUseCase;
+import dev.ellyon.SistemaEscolar.core.usecase.MateriaUseCases.EditarMateriaUseCase;
 import dev.ellyon.SistemaEscolar.infra.dtos.CoordenadorDto;
 import dev.ellyon.SistemaEscolar.infra.dtos.MateriaDto;
 import dev.ellyon.SistemaEscolar.infra.mapper.MateriaDtoMapper;
@@ -20,12 +21,14 @@ public class MateriaController {
     private final MateriaDtoMapper materiaDtoMapper;
     private final CriarMateriaUseCase criarMateriaUseCase;
     private final BuscarTodasMateriasUseCase buscarTodasMateriasUseCase;
+    private final EditarMateriaUseCase editarMateriaUseCase;
 
     // Constructor Injection
-    public MateriaController(MateriaDtoMapper materiaDtoMapper, CriarMateriaUseCase criarMateriaUseCase, BuscarTodasMateriasUseCase buscarTodasMateriasUseCase) {
+    public MateriaController(MateriaDtoMapper materiaDtoMapper, CriarMateriaUseCase criarMateriaUseCase, BuscarTodasMateriasUseCase buscarTodasMateriasUseCase, EditarMateriaUseCase editarMateriaUseCase) {
         this.materiaDtoMapper = materiaDtoMapper;
         this.criarMateriaUseCase = criarMateriaUseCase;
         this.buscarTodasMateriasUseCase = buscarTodasMateriasUseCase;
+        this.editarMateriaUseCase = editarMateriaUseCase;
     }
 
     // Endpoint para criar uma nova materia
@@ -70,5 +73,39 @@ public class MateriaController {
         response.put("dados", materiaDto);
 
         return ResponseEntity.ok(response);
+    }
+
+    // Endpoint para editar uma materia
+    @PutMapping("editar/{idMateria}")
+    public ResponseEntity<Map<String, Object>> editarMateria(@PathVariable Long idMateria, @RequestBody MateriaDto materiaDto){
+        try {
+            // Converter DTO para dominio
+            Materia materiaAtualizada = new Materia(idMateria, materiaDto.getNome(), null, null);
+
+            // Executar o usecase
+            Materia materiaEditada = editarMateriaUseCase.execute(idMateria, materiaAtualizada);
+
+            // Preparar a resposta
+            MateriaDto resposta = new MateriaDto();
+            resposta.setIdMateria(materiaEditada.getIdMateria());
+            resposta.setNome(materiaEditada.getNome());
+            resposta.setCriadoEm(materiaEditada.getCriadoEm());
+            resposta.setAtualizadoEm(materiaEditada.getAtualizadoEm());
+
+            Map<String, Object> respostaCompleta = new HashMap<>();
+            respostaCompleta.put("message", "Materia editada com sucesso!");
+            respostaCompleta.put("dados da Materia", resposta);
+
+            return ResponseEntity.ok(respostaCompleta);
+        } catch (IllegalArgumentException error) {
+            Map<String, Object> respostaErro = new HashMap<>();
+            respostaErro.put("message", error.getMessage());
+            return ResponseEntity.badRequest().body(respostaErro);
+        } catch (RuntimeException error){
+            Map<String, Object> respostaErro = new HashMap<>();
+            respostaErro.put("message", error.getMessage());
+            return ResponseEntity.status(500).body(respostaErro);
+        }
+
     }
 }

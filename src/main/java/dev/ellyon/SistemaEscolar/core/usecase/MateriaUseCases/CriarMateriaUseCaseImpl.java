@@ -24,5 +24,6 @@ public class CriarMateriaUseCaseImpl implements CriarMateriaUseCase{
         if (materia.getNome().length() < 5){
             throw new ValidacaoException("O nome da matéria deve ter pelo menos 5 caracteres.");
         }
+
     }
 }

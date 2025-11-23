@@ -232,20 +232,20 @@ public class CoordenadorController {
             resposta.setAtualizadoEm(coordenadorEditado.getAtualizadoEm());
             resposta.setCriadoEm(coordenadorEditado.getCriadoEm());
 
-            Map<String, Object> response = new HashMap<>();
-            response.put("Message: ", "Coordenador editado com sucesso!");
-            response.put("Dados do Coordenador: ", resposta);
+            Map<String, Object> respostaCompleta = new HashMap<>();
+            respostaCompleta.put("message: ", "Coordenador editado com sucesso!");
+            respostaCompleta.put("dados do Coordenador: ", resposta);
 
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(respostaCompleta);
 
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException error) {
             Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("Error: ", e.getMessage());
+            errorResponse.put("Error: ", error.getMessage());
             return ResponseEntity.badRequest().body(errorResponse);
 
-        } catch (RuntimeException e) {
+        } catch (RuntimeException error) {
             Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("Error: ", e.getMessage());
+            errorResponse.put("Error: ", error.getMessage());
             return ResponseEntity.status(404).body(errorResponse);
         }
     }

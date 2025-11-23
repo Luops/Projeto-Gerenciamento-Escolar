@@ -2,6 +2,7 @@ package dev.ellyon.SistemaEscolar.infra.gateway;
 
 import dev.ellyon.SistemaEscolar.core.entities.Materia;
 import dev.ellyon.SistemaEscolar.core.gateway.MateriaGateway;
+import dev.ellyon.SistemaEscolar.infra.exceptions.Materia.MateriaNaoEncontradaPeloIdException;
 import dev.ellyon.SistemaEscolar.infra.mapper.MateriaEntityMapper;
 import dev.ellyon.SistemaEscolar.infra.persistence.MateriaEntity;
 import dev.ellyon.SistemaEscolar.infra.persistence.MateriaRepository;
@@ -33,5 +34,23 @@ public class MateriaRepositoryGateway implements MateriaGateway {
     @Override
     public List<Materia> buscarTodasMaterias() {
         return materiaRepository.findAll().stream().map(materiaEntityMapper::toDomain).toList();
+    }
+
+    @Override
+    public Materia editarMateria(Long idMateria, Materia materiaAtualizado) {
+        // 1. Buscar a matéria existente
+        MateriaEntity materiaExistente = materiaRepository.findById(idMateria)
+                .orElseThrow(() -> new MateriaNaoEncontradaPeloIdException(idMateria));
+
+        // 2. Atualizar os campos necessários
+        materiaExistente.setNome(materiaAtualizado.getNome().toUpperCase());
+
+        // 3. Atualizar a data de atualização
+        materiaExistente.setAtualizadoEm(LocalDateTime.now());
+
+        // 4. Salvar as alterações
+        MateriaEntity materiaSalva = materiaRepository.save(materiaExistente);
+
+        return materiaEntityMapper.toDomain(materiaSalva);
     }
 }
