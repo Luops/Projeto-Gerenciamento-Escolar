@@ -2,9 +2,7 @@ package dev.ellyon.SistemaEscolar.infra.controller;
 
 import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
 import dev.ellyon.SistemaEscolar.core.entities.Materia;
-import dev.ellyon.SistemaEscolar.core.usecase.MateriaUseCases.BuscarTodasMateriasUseCase;
-import dev.ellyon.SistemaEscolar.core.usecase.MateriaUseCases.CriarMateriaUseCase;
-import dev.ellyon.SistemaEscolar.core.usecase.MateriaUseCases.EditarMateriaUseCase;
+import dev.ellyon.SistemaEscolar.core.usecase.MateriaUseCases.*;
 import dev.ellyon.SistemaEscolar.infra.dtos.CoordenadorDto;
 import dev.ellyon.SistemaEscolar.infra.dtos.MateriaDto;
 import dev.ellyon.SistemaEscolar.infra.mapper.MateriaDtoMapper;
@@ -22,13 +20,21 @@ public class MateriaController {
     private final CriarMateriaUseCase criarMateriaUseCase;
     private final BuscarTodasMateriasUseCase buscarTodasMateriasUseCase;
     private final EditarMateriaUseCase editarMateriaUseCase;
+    private final BuscarMateriaPeloIdUseCase buscarMateriaPeloIdUseCase;
+    private final DeletarMateriaUseCase deletarMateriaUseCase;
+    private final ContarTotalMateriasUseCase contarTotalMateriasUseCase;
+    private final BuscarMateriasPeloNomeUseCase buscarMateriasPeloNomeUseCase;
 
     // Constructor Injection
-    public MateriaController(MateriaDtoMapper materiaDtoMapper, CriarMateriaUseCase criarMateriaUseCase, BuscarTodasMateriasUseCase buscarTodasMateriasUseCase, EditarMateriaUseCase editarMateriaUseCase) {
+    public MateriaController(MateriaDtoMapper materiaDtoMapper, CriarMateriaUseCase criarMateriaUseCase, BuscarTodasMateriasUseCase buscarTodasMateriasUseCase, EditarMateriaUseCase editarMateriaUseCase, BuscarMateriaPeloIdUseCase buscarMateriaPeloIdUseCase, DeletarMateriaUseCase deletarMateriaUseCase, ContarTotalMateriasUseCase contarTotalMateriasUseCase, BuscarMateriasPeloNomeUseCase buscarMateriasPeloNomeUseCase) {
         this.materiaDtoMapper = materiaDtoMapper;
         this.criarMateriaUseCase = criarMateriaUseCase;
         this.buscarTodasMateriasUseCase = buscarTodasMateriasUseCase;
         this.editarMateriaUseCase = editarMateriaUseCase;
+        this.buscarMateriaPeloIdUseCase = buscarMateriaPeloIdUseCase;
+        this.deletarMateriaUseCase = deletarMateriaUseCase;
+        this.contarTotalMateriasUseCase = contarTotalMateriasUseCase;
+        this.buscarMateriasPeloNomeUseCase = buscarMateriasPeloNomeUseCase;
     }
 
     // Endpoint para criar uma nova materia
@@ -51,7 +57,6 @@ public class MateriaController {
         return ResponseEntity.ok(response);
     }
 
-
     // Endpoint para listar materias
     @GetMapping("buscartodas")
     public ResponseEntity<Map<String, Object>>buscarTodasMaterias() {
@@ -71,6 +76,31 @@ public class MateriaController {
         response.put("message", "Materias encontradas com sucesso!");
         response.put("total", materiaDto.size());
         response.put("dados", materiaDto);
+
+        return ResponseEntity.ok(response);
+    }
+
+
+    // Endpoint para listar materias pelo nome
+    @GetMapping("buscarpelonome")
+    public ResponseEntity<Map<String, Object>> buscarMateriasPeloNome(@RequestParam String nome) {
+        List<Materia> materias = buscarMateriasPeloNomeUseCase.execute(nome);
+        Map<String, Object> response = new HashMap<>();
+        // Verificar se a lista está vazia
+        if (materias.isEmpty()) {
+            response.put("message", "Nenhuma materia foi encontrada com este nome.");
+            response.put("nome", nome);
+            response.put("total", 0);
+            response.put("dados", List.of()); // Lista vazia
+            return ResponseEntity.ok(response);
+        }
+        List<MateriaDto> materiasDto = materias.stream()
+                .map(materia -> materiaDtoMapper.toDto(materia)) // Converte cada materia para DTO
+                .toList();
+        response.put("message", "Materias encontradas com sucesso!");
+        response.put("nome", nome);
+        response.put("total", materiasDto.size());
+        response.put("dados", materiasDto);
 
         return ResponseEntity.ok(response);
     }
@@ -107,5 +137,54 @@ public class MateriaController {
             return ResponseEntity.status(500).body(respostaErro);
         }
 
+    }
+
+    // Endpoint para buscar materia pelo id
+    @GetMapping("buscarpeloid/{id}")
+    public ResponseEntity<Map<String, Object>> buscarMateriaPeloId(
+            @PathVariable Long idMateria) {
+        Materia materia = buscarMateriaPeloIdUseCase.execute(idMateria);
+
+        MateriaDto resposta = materiaDtoMapper.toDto(materia);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Materia encontrada!");
+        response.put("dados", resposta);
+
+        return ResponseEntity.ok(response);
+    }
+
+    // Endpoint para deletar materia
+    @DeleteMapping("deletar/{idMateria}")
+    public ResponseEntity<Map<String, Object>> deletarMateria(@PathVariable Long idMateria) {
+        try {
+            // Buscar materia antes de deletar para pegar os dados
+            Materia materiaDeletada = buscarMateriaPeloIdUseCase.execute(idMateria);
+
+            deletarMateriaUseCase.execute(idMateria);
+
+            // Contar total após deleção
+            long totalMaterias = contarTotalMateriasUseCase.execute();
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Materia deletada com sucesso!");
+            response.put("materiaDeletada", Map.of(
+                    "id", idMateria,
+                    "nome", materiaDeletada.getNome()
+            ));
+            response.put("total de Materias: ", totalMaterias);
+
+            return ResponseEntity.ok(response);
+
+        } catch (IllegalArgumentException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("Error", e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
+
+        } catch (RuntimeException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("Error", e.getMessage());
+            return ResponseEntity.status(404).body(errorResponse);
+        }
     }
 }

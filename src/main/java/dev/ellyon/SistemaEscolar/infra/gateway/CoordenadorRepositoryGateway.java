@@ -127,24 +127,9 @@ public class CoordenadorRepositoryGateway implements CoordenadorGateway {
         }
 
         usuario.setAtualizadoEm(LocalDateTime.now());
-
-        // LOG ANTES DE SALVAR
-        System.out.println("=== ANTES DE SALVAR ===");
-        System.out.println("Coordenador criadoEm: " + coordenadorExistente.getCriadoEm());
-        System.out.println("Coordenador atualizadoEm: " + coordenadorExistente.getAtualizadoEm());
-        System.out.println("Usuario criadoEm: " + usuario.getCriadoEm());
-        System.out.println("Usuario atualizadoEm: " + usuario.getAtualizadoEm());
-
         // 4. Salvar alterações
         usuarioRepository.save(usuario);
         CoordenadorEntity coordenadorSalvo = coordenadorRepository.save(coordenadorExistente);
-
-        // LOG DEPOIS DE SALVAR
-        System.out.println("=== DEPOIS DE SALVAR ===");
-        System.out.println("Coordenador criadoEm: " + coordenadorSalvo.getCriadoEm());
-        System.out.println("Coordenador atualizadoEm: " + coordenadorSalvo.getAtualizadoEm());
-        System.out.println("Usuario criadoEm: " + coordenadorSalvo.getUsuario().getCriadoEm());
-        System.out.println("Usuario atualizadoEm: " + coordenadorSalvo.getUsuario().getAtualizadoEm());
 
         // 5. Retornar com dados completos
         return coordenadorEntityMapper.toDomainWithUsuario(coordenadorSalvo);

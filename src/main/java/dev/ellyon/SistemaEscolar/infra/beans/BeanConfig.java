@@ -82,4 +82,24 @@ public class BeanConfig {
         return new EditarMateriaUseCaseImpl(materiaGateway);
     }
 
+    @Bean
+    public DeletarMateriaUseCase deletarMateriaUseCase(MateriaGateway materiaGateway){
+        return new DeletarMateriaUseCaseImpl(materiaGateway);
+    }
+
+    @Bean
+    public BuscarMateriaPeloIdUseCase buscarMateriaPeloIdUseCase(MateriaGateway materiaGateway){
+        return new BuscarMateriaPeloIdUseCaseImpl(materiaGateway);
+    }
+
+    @Bean
+    public ContarTotalMateriasUseCase contarTotalMateriasUseCase(MateriaGateway materiaGateway) {
+        return new ContarTotalMateriasUseCaseImpl(materiaGateway);
+    }
+
+    @Bean
+    public BuscarMateriasPeloNomeUseCase buscarMateriasPeloNomeUseCase(MateriaGateway materiaGateway) {
+        return new BuscarMateriasPeloNomeUseCaseImpl(materiaGateway);
+    }
+
 }

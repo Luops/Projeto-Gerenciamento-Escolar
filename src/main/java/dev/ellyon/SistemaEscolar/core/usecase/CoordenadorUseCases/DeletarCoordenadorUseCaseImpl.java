@@ -1,6 +1,7 @@
 package dev.ellyon.SistemaEscolar.core.usecase.CoordenadorUseCases;
 
 import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
+import dev.ellyon.SistemaEscolar.core.exceptions.ValidacaoException;
 import dev.ellyon.SistemaEscolar.core.gateway.CoordenadorGateway;
 
 public class DeletarCoordenadorUseCaseImpl implements DeletarCoordenadorUseCase {
@@ -19,7 +20,7 @@ public class DeletarCoordenadorUseCaseImpl implements DeletarCoordenadorUseCase 
 
     private void validar(Long id){
         if (id == null || id <= 0) {
-            throw new IllegalArgumentException("ID inválido");
+            throw new ValidacaoException("ID do Coordenador inválido");
         }
     }
 }

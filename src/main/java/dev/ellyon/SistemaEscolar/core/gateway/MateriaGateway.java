@@ -9,5 +9,13 @@ public interface MateriaGateway {
     Materia criarMateria(Materia materia);
     List<Materia> buscarTodasMaterias();
     Materia editarMateria(Long idMateria, Materia materiaAtualizado);
+    void deletarMateria(Long idMateria);
 
+    // Queries
+    Materia buscarMateriaPeloId(Long idMateria);
+    List<Materia> buscarMateriasPeloNome(String nome);
+    long contarTotalMaterias();
+
+    // Exeptions - Infra
+    boolean isMateriaExistentePorId(Long id);
 }

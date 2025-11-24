@@ -2,8 +2,10 @@ package dev.ellyon.SistemaEscolar.infra.gateway;
 
 import dev.ellyon.SistemaEscolar.core.entities.Materia;
 import dev.ellyon.SistemaEscolar.core.gateway.MateriaGateway;
+import dev.ellyon.SistemaEscolar.infra.exceptions.Coordenador.CoordenadorNaoEncontradoPeloIdException;
 import dev.ellyon.SistemaEscolar.infra.exceptions.Materia.MateriaNaoEncontradaPeloIdException;
 import dev.ellyon.SistemaEscolar.infra.mapper.MateriaEntityMapper;
+import dev.ellyon.SistemaEscolar.infra.persistence.CoordenadorEntity;
 import dev.ellyon.SistemaEscolar.infra.persistence.MateriaEntity;
 import dev.ellyon.SistemaEscolar.infra.persistence.MateriaRepository;
 import org.springframework.stereotype.Component;
@@ -19,6 +21,12 @@ public class MateriaRepositoryGateway implements MateriaGateway {
     public MateriaRepositoryGateway(MateriaRepository materiaRepository, MateriaEntityMapper materiaEntityMapper) {
         this.materiaRepository = materiaRepository;
         this.materiaEntityMapper = materiaEntityMapper;
+    }
+
+    // Verifica se já existe uma materia com o id fornecido ao criar ou editar
+    @Override
+    public boolean isMateriaExistentePorId(Long idMateria) {
+        return materiaRepository.findAll().stream().anyMatch(materia -> materia.getIdMateria().equals(idMateria));
     }
 
     @Override
@@ -52,5 +60,35 @@ public class MateriaRepositoryGateway implements MateriaGateway {
         MateriaEntity materiaSalva = materiaRepository.save(materiaExistente);
 
         return materiaEntityMapper.toDomain(materiaSalva);
+    }
+
+    @Override
+    public Materia buscarMateriaPeloId(Long idMateria) {
+        MateriaEntity materiaEntity = materiaRepository.findById(idMateria)
+                .orElseThrow(() -> new MateriaNaoEncontradaPeloIdException(idMateria));
+
+        return materiaEntityMapper.toDomain(materiaEntity);
+    }
+
+    @Override
+    public void deletarMateria(Long idMateria) {
+        // 1. Buscar materia para garantir que existe
+        MateriaEntity materia = materiaRepository.findById(idMateria)
+                .orElseThrow(() -> new MateriaNaoEncontradaPeloIdException(idMateria));
+
+        // 2. Deletar materia
+        materiaRepository.deleteById(idMateria);
+    }
+
+    @Override
+    public long contarTotalMaterias() {
+        return materiaRepository.count();
+    }
+
+    @Override
+    public List<Materia> buscarMateriasPeloNome(String nome) {
+        return materiaRepository.findByNomeContainingIgnoreCase(nome).stream()
+                .map(materiaEntityMapper::toDomain)
+                .toList();
     }
 }
