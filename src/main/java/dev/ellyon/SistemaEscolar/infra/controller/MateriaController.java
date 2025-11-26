@@ -6,9 +6,11 @@ import dev.ellyon.SistemaEscolar.core.usecase.MateriaUseCases.*;
 import dev.ellyon.SistemaEscolar.infra.dtos.CoordenadorDto;
 import dev.ellyon.SistemaEscolar.infra.dtos.MateriaDto;
 import dev.ellyon.SistemaEscolar.infra.mapper.MateriaDtoMapper;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,9 +26,10 @@ public class MateriaController {
     private final DeletarMateriaUseCase deletarMateriaUseCase;
     private final ContarTotalMateriasUseCase contarTotalMateriasUseCase;
     private final BuscarMateriasPeloNomeUseCase buscarMateriasPeloNomeUseCase;
+    private final BuscarMateriasEntreDatasUseCase buscarMateriasEntreDatasUseCase;
 
     // Constructor Injection
-    public MateriaController(MateriaDtoMapper materiaDtoMapper, CriarMateriaUseCase criarMateriaUseCase, BuscarTodasMateriasUseCase buscarTodasMateriasUseCase, EditarMateriaUseCase editarMateriaUseCase, BuscarMateriaPeloIdUseCase buscarMateriaPeloIdUseCase, DeletarMateriaUseCase deletarMateriaUseCase, ContarTotalMateriasUseCase contarTotalMateriasUseCase, BuscarMateriasPeloNomeUseCase buscarMateriasPeloNomeUseCase) {
+    public MateriaController(MateriaDtoMapper materiaDtoMapper, CriarMateriaUseCase criarMateriaUseCase, BuscarTodasMateriasUseCase buscarTodasMateriasUseCase, EditarMateriaUseCase editarMateriaUseCase, BuscarMateriaPeloIdUseCase buscarMateriaPeloIdUseCase, DeletarMateriaUseCase deletarMateriaUseCase, ContarTotalMateriasUseCase contarTotalMateriasUseCase, BuscarMateriasPeloNomeUseCase buscarMateriasPeloNomeUseCase, BuscarMateriasEntreDatasUseCase buscarMateriasEntreDatasUseCase) {
         this.materiaDtoMapper = materiaDtoMapper;
         this.criarMateriaUseCase = criarMateriaUseCase;
         this.buscarTodasMateriasUseCase = buscarTodasMateriasUseCase;
@@ -35,6 +38,7 @@ public class MateriaController {
         this.deletarMateriaUseCase = deletarMateriaUseCase;
         this.contarTotalMateriasUseCase = contarTotalMateriasUseCase;
         this.buscarMateriasPeloNomeUseCase = buscarMateriasPeloNomeUseCase;
+        this.buscarMateriasEntreDatasUseCase = buscarMateriasEntreDatasUseCase;
     }
 
     // Endpoint para criar uma nova materia
@@ -79,7 +83,6 @@ public class MateriaController {
 
         return ResponseEntity.ok(response);
     }
-
 
     // Endpoint para listar materias pelo nome
     @GetMapping("buscarpelonome")
@@ -187,4 +190,35 @@ public class MateriaController {
             return ResponseEntity.status(404).body(errorResponse);
         }
     }
+
+    // Endpoint para listar materias pela data de cadastro
+    @GetMapping("buscarpeladata")
+    public ResponseEntity<Map<String, Object>> buscarMateriasPeloPeriodo(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataInicio,
+                                                                              @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataFim) {
+        List<Materia> materias = buscarMateriasEntreDatasUseCase.execute(dataInicio, dataFim);
+        Map<String, Object> response = new HashMap<>();
+        // Verificar se a lista está vazia
+        if (materias.isEmpty()) {
+            response.put("message", "Nenhuma materia foi encontrada no período informado.");
+            response.put("dataInicio", dataInicio);
+            response.put("dataFim", dataFim);
+            response.put("total", 0);
+            response.put("dados", List.of()); // Lista vazia
+            return ResponseEntity.ok(response);
+        }
+
+        // Se encontrou materias
+        List<MateriaDto> materiasDto = materias.stream()
+                .map(materia -> materiaDtoMapper.toDto(materia))
+                .toList();
+
+        response.put("message", "Materias encontradas com sucesso!");
+        response.put("dataInicio", dataInicio);
+        response.put("dataFim", dataFim);
+        response.put("total", materiasDto.size());
+        response.put("dados", materiasDto);
+
+        return ResponseEntity.ok(response);
+    }
+
 }

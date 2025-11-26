@@ -1,23 +1,23 @@
-package dev.ellyon.SistemaEscolar.core.usecase.CoordenadorUseCases;
+package dev.ellyon.SistemaEscolar.core.usecase.MateriaUseCases;
 
-import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
+import dev.ellyon.SistemaEscolar.core.entities.Materia;
 import dev.ellyon.SistemaEscolar.core.exceptions.ValidacaoException;
-import dev.ellyon.SistemaEscolar.core.gateway.CoordenadorGateway;
+import dev.ellyon.SistemaEscolar.core.gateway.MateriaGateway;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class BuscarCoordenadoresEntreDatasUseCaseImpl implements BuscarCoordenadoresEntreDatasUseCase {
-    private final CoordenadorGateway coordenadorGateway;
+public class BuscarMateriasEntreDatasUseCaseImpl implements BuscarMateriasEntreDatasUseCase {
+    private final MateriaGateway materiaGateway;
 
-    public BuscarCoordenadoresEntreDatasUseCaseImpl(CoordenadorGateway coordenadorGateway) {
-        this.coordenadorGateway = coordenadorGateway;
+    public BuscarMateriasEntreDatasUseCaseImpl(MateriaGateway materiaGateway) {
+        this.materiaGateway = materiaGateway;
     }
 
     @Override
-    public List<Coordenador> execute(LocalDateTime dataInicio, LocalDateTime dataFim) {
+    public List<Materia> execute(LocalDateTime dataInicio, LocalDateTime dataFim) {
         validarDatas(dataInicio, dataFim);
-        return coordenadorGateway.buscarCoordenadoresEntreDatas(dataInicio, dataFim);
+        return materiaGateway.buscarMateriasEntreDatasCriacao(dataInicio, dataFim);
     }
 
     private void validarDatas(LocalDateTime dataInicio, LocalDateTime dataFim) {

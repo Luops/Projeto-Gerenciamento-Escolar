@@ -2,6 +2,7 @@ package dev.ellyon.SistemaEscolar.core.gateway;
 
 import dev.ellyon.SistemaEscolar.core.entities.Materia;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface MateriaGateway {
@@ -15,6 +16,7 @@ public interface MateriaGateway {
     Materia buscarMateriaPeloId(Long idMateria);
     List<Materia> buscarMateriasPeloNome(String nome);
     long contarTotalMaterias();
+    List<Materia> buscarMateriasEntreDatasCriacao(LocalDateTime dataInicio, LocalDateTime dataFim);
 
     // Exeptions - Infra
     boolean isMateriaExistentePorId(Long id);

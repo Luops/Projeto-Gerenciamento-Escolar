@@ -91,4 +91,9 @@ public class MateriaRepositoryGateway implements MateriaGateway {
                 .map(materiaEntityMapper::toDomain)
                 .toList();
     }
+
+    @Override
+    public List<Materia> buscarMateriasEntreDatasCriacao(LocalDateTime dataInicio, LocalDateTime dataFim) {
+        return materiaRepository.findByCriadoEmBetween(dataInicio, dataFim).stream().map(materiaEntityMapper::toDomain).toList();
+    }
 }
