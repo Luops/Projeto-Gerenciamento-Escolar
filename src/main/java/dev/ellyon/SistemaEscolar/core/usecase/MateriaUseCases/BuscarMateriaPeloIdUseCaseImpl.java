@@ -1,9 +1,7 @@
 package dev.ellyon.SistemaEscolar.core.usecase.MateriaUseCases;
 
-import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
 import dev.ellyon.SistemaEscolar.core.entities.Materia;
 import dev.ellyon.SistemaEscolar.core.exceptions.ValidacaoException;
-import dev.ellyon.SistemaEscolar.core.gateway.CoordenadorGateway;
 import dev.ellyon.SistemaEscolar.core.gateway.MateriaGateway;
 
 public class BuscarMateriaPeloIdUseCaseImpl implements BuscarMateriaPeloIdUseCase {

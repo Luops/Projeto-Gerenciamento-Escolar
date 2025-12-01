@@ -5,7 +5,9 @@ import dev.ellyon.SistemaEscolar.core.entities.Turma;
 public interface TurmaGateway {
     // CRUD
     Turma criarTurma(Turma turma);
+    Turma buscarTurmaPeloId(Long idTurma);
+    Turma editarTurma(Long idTurma, Turma turmaAtualizado);
 
     // Exeptions - Infra
-    //boolean isMateriaExistentePorId(Long id);
+    boolean isTurmaExistentePorId(Long id);
 }

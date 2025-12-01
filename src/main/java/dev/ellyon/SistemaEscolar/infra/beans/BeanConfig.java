@@ -5,8 +5,7 @@ import dev.ellyon.SistemaEscolar.core.gateway.MateriaGateway;
 import dev.ellyon.SistemaEscolar.core.gateway.TurmaGateway;
 import dev.ellyon.SistemaEscolar.core.usecase.CoordenadorUseCases.*;
 import dev.ellyon.SistemaEscolar.core.usecase.MateriaUseCases.*;
-import dev.ellyon.SistemaEscolar.core.usecase.TurmaUseCases.CriarTurmaUseCase;
-import dev.ellyon.SistemaEscolar.core.usecase.TurmaUseCases.CriarTurmaUseCaseImpl;
+import dev.ellyon.SistemaEscolar.core.usecase.TurmaUseCases.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -116,9 +115,17 @@ public class BeanConfig {
         return new BuscarMateriasEntreDatasUseCaseImpl(materiaGateway);
     }
 
-
     /*
      * Config para Turma
      */
+    @Bean
+    public BuscarTurmaPeloIdUseCase buscarTurmaPeloIdUseCase(TurmaGateway turmaGateway){
+        return new BuscarTurmaPeloIdUseCaseImpl(turmaGateway);
+    }
+
+    @Bean
+    public EditarTurmaUseCase editarTurmaUseCase(TurmaGateway turmaGateway) {
+        return new EditarTurmaUseCaseImpl(turmaGateway);
+    }
 
 }

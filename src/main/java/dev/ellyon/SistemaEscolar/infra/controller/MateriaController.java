@@ -143,7 +143,7 @@ public class MateriaController {
     }
 
     // Endpoint para buscar materia pelo id
-    @GetMapping("buscarpeloid/{id}")
+    @GetMapping("buscarpeloid/{idMateria}")
     public ResponseEntity<Map<String, Object>> buscarMateriaPeloId(
             @PathVariable Long idMateria) {
         Materia materia = buscarMateriaPeloIdUseCase.execute(idMateria);
