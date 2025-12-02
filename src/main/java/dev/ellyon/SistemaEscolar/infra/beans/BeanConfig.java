@@ -128,4 +128,24 @@ public class BeanConfig {
         return new EditarTurmaUseCaseImpl(turmaGateway);
     }
 
+    @Bean
+    public DeletarTurmaUseCase deletarTurmaUseCase(TurmaGateway turmaGateway){
+        return new DeletarTurmaUseCaseImpl(turmaGateway);
+    }
+
+    @Bean
+    public ContarTotalTurmasUseCase contarTotalTurmasUseCase(TurmaGateway turmaGateway) {
+        return new ContarTotalTurmasUseCaseImpl(turmaGateway);
+    }
+
+    @Bean
+    public BuscarTodasTurmasUseCase buscarTodasTurmasUseCase(TurmaGateway turmaGateway) {
+        return new BuscarTodasTurmasUseCaseImpl(turmaGateway);
+    }
+
+    @Bean
+    public BuscarTurmaPeloNumeroUseCase buscarTurmaPeloNumeroUseCase(TurmaGateway turmaGateway) {
+        return new BuscarTurmaPeloNumeroUseCaseImpl(turmaGateway);
+    }
+
 }

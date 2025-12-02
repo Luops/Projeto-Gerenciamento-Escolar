@@ -4,6 +4,7 @@ import dev.ellyon.SistemaEscolar.core.entities.Turma;
 import dev.ellyon.SistemaEscolar.core.gateway.TurmaGateway;
 import dev.ellyon.SistemaEscolar.infra.exceptions.Materia.MateriaNaoEncontradaPeloIdException;
 import dev.ellyon.SistemaEscolar.infra.exceptions.Turma.TurmaNaoEncontradaPeloIdException;
+import dev.ellyon.SistemaEscolar.infra.exceptions.Turma.TurmaNaoEncontradaPeloNumeroException;
 import dev.ellyon.SistemaEscolar.infra.mapper.TurmaEntityMapper;
 import dev.ellyon.SistemaEscolar.infra.persistence.MateriaEntity;
 import dev.ellyon.SistemaEscolar.infra.persistence.TurmaEntity;
@@ -11,6 +12,7 @@ import dev.ellyon.SistemaEscolar.infra.persistence.TurmaRepository;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 public class TurmaRepositoryGateway implements TurmaGateway {
@@ -38,6 +40,11 @@ public class TurmaRepositoryGateway implements TurmaGateway {
         novaTurma.setAtualizadoEm(LocalDateTime.now());
         TurmaEntity turmaSalva = turmaRepository.save(novaTurma);
         return turmaEntityMapper.toDomain(turmaSalva);
+    }
+
+    @Override
+    public List<Turma> buscarTodasTurmas() {
+        return turmaRepository.findAll().stream().map(turmaEntityMapper::toDomain).toList();
     }
 
     @Override
@@ -72,5 +79,28 @@ public class TurmaRepositoryGateway implements TurmaGateway {
         TurmaEntity turmaSalva = turmaRepository.save(turmaExistente);
 
         return turmaEntityMapper.toDomain(turmaSalva);
+    }
+
+    @Override
+    public void deletarTurma(Long idTurma) {
+        // 1. Buscar turma para garantir que existe
+        TurmaEntity turma = turmaRepository.findById(idTurma)
+                .orElseThrow(() -> new TurmaNaoEncontradaPeloIdException(idTurma));
+
+        // 2. Deletar materia
+        turmaRepository.deleteById(idTurma);
+    }
+
+    @Override
+    public long contarTotalTurmas() {
+        return turmaRepository.count();
+    }
+
+    @Override
+    public Turma buscarTurmaPeloNumero(int numero) {
+        TurmaEntity turmaEntity = turmaRepository.findByNumero(numero)
+                .orElseThrow(() -> new TurmaNaoEncontradaPeloNumeroException(numero));
+
+        return turmaEntityMapper.toDomain(turmaEntity);
     }
 }

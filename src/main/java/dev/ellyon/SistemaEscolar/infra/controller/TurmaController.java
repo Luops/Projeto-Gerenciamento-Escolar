@@ -3,9 +3,7 @@ package dev.ellyon.SistemaEscolar.infra.controller;
 import dev.ellyon.SistemaEscolar.core.entities.Materia;
 import dev.ellyon.SistemaEscolar.core.entities.Turma;
 import dev.ellyon.SistemaEscolar.core.usecase.MateriaUseCases.*;
-import dev.ellyon.SistemaEscolar.core.usecase.TurmaUseCases.BuscarTurmaPeloIdUseCase;
-import dev.ellyon.SistemaEscolar.core.usecase.TurmaUseCases.CriarTurmaUseCase;
-import dev.ellyon.SistemaEscolar.core.usecase.TurmaUseCases.EditarTurmaUseCase;
+import dev.ellyon.SistemaEscolar.core.usecase.TurmaUseCases.*;
 import dev.ellyon.SistemaEscolar.infra.dtos.MateriaDto;
 import dev.ellyon.SistemaEscolar.infra.dtos.TurmaDto;
 import dev.ellyon.SistemaEscolar.infra.mapper.MateriaDtoMapper;
@@ -26,13 +24,21 @@ public class TurmaController {
     private final CriarTurmaUseCase criarTurmaUseCase;
     private final BuscarTurmaPeloIdUseCase buscarTurmaPeloIdUseCase;
     private final EditarTurmaUseCase editarTurmaUseCase;
+    private final DeletarTurmaUseCase deletarTurmaUseCase;
+    private final ContarTotalTurmasUseCase contarTotalTurmasUseCase;
+    private final BuscarTodasTurmasUseCase buscarTodasTurmasUseCase;
+    private final BuscarTurmaPeloNumeroUseCase buscarTurmaPeloNumeroUseCase;
 
     // Constructor Injection
-    public TurmaController(TurmaDtoMapper turmaDtoMapper, CriarTurmaUseCase criarTurmaUseCase, BuscarTurmaPeloIdUseCase buscarTurmaPeloIdUseCase, EditarTurmaUseCase editarTurmaUseCase) {
+    public TurmaController(TurmaDtoMapper turmaDtoMapper, CriarTurmaUseCase criarTurmaUseCase, BuscarTurmaPeloIdUseCase buscarTurmaPeloIdUseCase, EditarTurmaUseCase editarTurmaUseCase, DeletarTurmaUseCase deletarTurmaUseCase, ContarTotalTurmasUseCase contarTotalTurmasUseCase, BuscarTodasTurmasUseCase buscarTodasTurmasUseCase, BuscarTurmaPeloNumeroUseCase buscarTurmaPeloNumeroUseCase) {
         this.turmaDtoMapper = turmaDtoMapper;
         this.criarTurmaUseCase = criarTurmaUseCase;
         this.buscarTurmaPeloIdUseCase = buscarTurmaPeloIdUseCase;
         this.editarTurmaUseCase = editarTurmaUseCase;
+        this.deletarTurmaUseCase = deletarTurmaUseCase;
+        this.contarTotalTurmasUseCase = contarTotalTurmasUseCase;
+        this.buscarTodasTurmasUseCase = buscarTodasTurmasUseCase;
+        this.buscarTurmaPeloNumeroUseCase = buscarTurmaPeloNumeroUseCase;
     }
 
     // Endpoint para criar uma nova turma
@@ -54,6 +60,29 @@ public class TurmaController {
         Map<String, Object> response = new HashMap<>();
         response.put("message: ", "Turma criada com sucesso!");
         response.put("dados da Turma: ", resposta);
+        return ResponseEntity.ok(response);
+    }
+
+    // Endpoint para listar turmas
+    @GetMapping("buscartodas")
+    public ResponseEntity<Map<String, Object>>buscarTodasTurmas() {
+        List<Turma> turmas = buscarTodasTurmasUseCase.execute();
+        Map<String, Object> response = new HashMap<>();
+        // Verificar se a lista está vazia
+        if (turmas.isEmpty()) {
+            response.put("message", "Nenhuma turma foi encontrada.");
+            response.put("total", 0);
+            response.put("dados", List.of()); // Lista vazia
+            return ResponseEntity.ok(response);
+        }
+
+        List<TurmaDto> turmaDto = turmas.stream()
+                .map(turma -> turmaDtoMapper.toDto(turma)) // Converte cada turma para DTO
+                .toList();
+        response.put("message", "Turmas encontradas com sucesso!");
+        response.put("total", turmaDto.size());
+        response.put("dados", turmaDto);
+
         return ResponseEntity.ok(response);
     }
 
@@ -106,6 +135,55 @@ public class TurmaController {
             return ResponseEntity.status(500).body(respostaErro);
         }
 
+    }
+
+    // Endpoint para deletar turma
+    @DeleteMapping("deletar/{idTurma}")
+    public ResponseEntity<Map<String, Object>> deletarTurma(@PathVariable Long idTurma) {
+        try {
+            // Buscar turma antes de deletar para pegar os dados
+            Turma turmaDeletada = buscarTurmaPeloIdUseCase.execute(idTurma);
+
+            deletarTurmaUseCase.execute(idTurma);
+
+            // Contar total após deleção
+            long totalTurmas = contarTotalTurmasUseCase.execute();
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Turma deletada com sucesso!");
+            response.put("turmaDeletada", Map.of(
+                    "id", idTurma,
+                    "número", turmaDeletada.getNumero(),
+                    "ano", turmaDeletada.getAno()
+            ));
+            response.put("total de Turmas: ", totalTurmas);
+
+            return ResponseEntity.ok(response);
+
+        } catch (IllegalArgumentException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("Error", e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
+
+        } catch (RuntimeException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("Error", e.getMessage());
+            return ResponseEntity.status(404).body(errorResponse);
+        }
+    }
+
+    // Endpoint para buscar turmas pelo número
+    @GetMapping("buscarpelonumero/{numero}")
+    public ResponseEntity<Map<String, Object>> buscarPeloNumero(@PathVariable int numero) {
+        Turma turma = buscarTurmaPeloNumeroUseCase.execute(numero);
+
+        TurmaDto resposta = turmaDtoMapper.toDto(turma);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "turma encontrada!");
+        response.put("dados", resposta);
+
+        return ResponseEntity.ok(response);
     }
 
 }
