@@ -148,4 +148,14 @@ public class BeanConfig {
         return new BuscarTurmaPeloNumeroUseCaseImpl(turmaGateway);
     }
 
+    @Bean
+    public BuscarTurmaPeloAnoUseCase buscarTurmaPeloAnoUseCase(TurmaGateway turmaGateway) {
+        return new BuscarTurmaPeloAnoUseCaseImpl(turmaGateway);
+    }
+
+    @Bean
+    public BuscarTurmasEntreDatasUseCase buscarTurmasEntreDatasUseCase(TurmaGateway turmaGateway) {
+        return new BuscarTurmasEntreDatasUseCaseImpl(turmaGateway);
+    }
+
 }

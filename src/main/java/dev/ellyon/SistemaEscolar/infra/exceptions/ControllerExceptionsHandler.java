@@ -4,6 +4,7 @@ import dev.ellyon.SistemaEscolar.infra.exceptions.Coordenador.CoordenadorNaoEnco
 import dev.ellyon.SistemaEscolar.infra.exceptions.Coordenador.DuplicateCoordenadorEmailException;
 import dev.ellyon.SistemaEscolar.infra.exceptions.Coordenador.DuplicateCoordenadorIdException;
 import dev.ellyon.SistemaEscolar.infra.exceptions.Materia.MateriaNaoEncontradaPeloIdException;
+import dev.ellyon.SistemaEscolar.infra.exceptions.Turma.TurmaNaoEncontradaPeloAnoException;
 import dev.ellyon.SistemaEscolar.infra.exceptions.Turma.TurmaNaoEncontradaPeloIdException;
 import dev.ellyon.SistemaEscolar.infra.exceptions.Turma.TurmaNaoEncontradaPeloNumeroException;
 import org.springframework.http.HttpStatus;
@@ -61,6 +62,14 @@ public class ControllerExceptionsHandler extends RuntimeException{
         Map<String, String> response = new HashMap<>();
         response.put("error", ex.getMessage());
         response.put("message:", "A turma com o número fornecido não foi encontrada no sistema.");
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(TurmaNaoEncontradaPeloAnoException.class)
+    public ResponseEntity<Map<String, String>> handleTurmaNaoEncontradaPeloAnoException(RuntimeException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("error", ex.getMessage());
+        response.put("message:", "A turma com o ano fornecido não foi encontrada no sistema.");
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }

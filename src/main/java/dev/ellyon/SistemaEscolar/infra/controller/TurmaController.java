@@ -28,9 +28,11 @@ public class TurmaController {
     private final ContarTotalTurmasUseCase contarTotalTurmasUseCase;
     private final BuscarTodasTurmasUseCase buscarTodasTurmasUseCase;
     private final BuscarTurmaPeloNumeroUseCase buscarTurmaPeloNumeroUseCase;
+    private final BuscarTurmaPeloAnoUseCase buscarTurmaPeloAnoUseCase;
+    private final BuscarTurmasEntreDatasUseCase buscarTurmasEntreDatasUseCase;
 
     // Constructor Injection
-    public TurmaController(TurmaDtoMapper turmaDtoMapper, CriarTurmaUseCase criarTurmaUseCase, BuscarTurmaPeloIdUseCase buscarTurmaPeloIdUseCase, EditarTurmaUseCase editarTurmaUseCase, DeletarTurmaUseCase deletarTurmaUseCase, ContarTotalTurmasUseCase contarTotalTurmasUseCase, BuscarTodasTurmasUseCase buscarTodasTurmasUseCase, BuscarTurmaPeloNumeroUseCase buscarTurmaPeloNumeroUseCase) {
+    public TurmaController(TurmaDtoMapper turmaDtoMapper, CriarTurmaUseCase criarTurmaUseCase, BuscarTurmaPeloIdUseCase buscarTurmaPeloIdUseCase, EditarTurmaUseCase editarTurmaUseCase, DeletarTurmaUseCase deletarTurmaUseCase, ContarTotalTurmasUseCase contarTotalTurmasUseCase, BuscarTodasTurmasUseCase buscarTodasTurmasUseCase, BuscarTurmaPeloNumeroUseCase buscarTurmaPeloNumeroUseCase, BuscarTurmaPeloAnoUseCase buscarTurmaPeloAnoUseCase, BuscarTurmasEntreDatasUseCase buscarTurmasEntreDatasUseCase) {
         this.turmaDtoMapper = turmaDtoMapper;
         this.criarTurmaUseCase = criarTurmaUseCase;
         this.buscarTurmaPeloIdUseCase = buscarTurmaPeloIdUseCase;
@@ -39,6 +41,8 @@ public class TurmaController {
         this.contarTotalTurmasUseCase = contarTotalTurmasUseCase;
         this.buscarTodasTurmasUseCase = buscarTodasTurmasUseCase;
         this.buscarTurmaPeloNumeroUseCase = buscarTurmaPeloNumeroUseCase;
+        this.buscarTurmaPeloAnoUseCase = buscarTurmaPeloAnoUseCase;
+        this.buscarTurmasEntreDatasUseCase = buscarTurmasEntreDatasUseCase;
     }
 
     // Endpoint para criar uma nova turma
@@ -185,5 +189,59 @@ public class TurmaController {
 
         return ResponseEntity.ok(response);
     }
+
+    // Endpoint para buscar turmas pelo ano
+    @GetMapping("buscarpeloano/{ano}")
+    public ResponseEntity<Map<String, Object>> buscarPeloAno(@PathVariable String ano) {
+        List<Turma> turmas = buscarTurmaPeloAnoUseCase.execute(ano);
+        Map<String, Object> response = new HashMap<>();
+        // Verificar se a lista está vazia
+        if (turmas.isEmpty()) {
+            response.put("message", "Nenhuma turma foi encontrada.");
+            response.put("total", 0);
+            response.put("dados", List.of()); // Lista vazia
+            return ResponseEntity.ok(response);
+        }
+
+        List<TurmaDto> turmaDto = turmas.stream()
+                .map(turma -> turmaDtoMapper.toDto(turma)) // Converte cada turma para DTO
+                .toList();
+        response.put("message", "Turmas encontradas com sucesso!");
+        response.put("total", turmaDto.size());
+        response.put("dados", turmaDto);
+
+        return ResponseEntity.ok(response);
+    }
+
+    // Endpoint para listar turmas pela data de cadastro
+    @GetMapping("buscarpeladata")
+    public ResponseEntity<Map<String, Object>> buscarTurmasPeloPeriodo(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataInicio,
+                                                                         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataFim) {
+        List<Turma> turmas = buscarTurmasEntreDatasUseCase.execute(dataInicio, dataFim);
+        Map<String, Object> response = new HashMap<>();
+        // Verificar se a lista está vazia
+        if (turmas.isEmpty()) {
+            response.put("message", "Nenhuma turma foi encontrada no período informado.");
+            response.put("dataInicio", dataInicio);
+            response.put("dataFim", dataFim);
+            response.put("total", 0);
+            response.put("dados", List.of()); // Lista vazia
+            return ResponseEntity.ok(response);
+        }
+
+        // Se encontrou turmas, converte para DTO
+        List<TurmaDto> turmasDto = turmas.stream()
+                .map(turma -> turmaDtoMapper.toDto(turma))
+                .toList();
+
+        response.put("message", "Turmas encontradas com sucesso!");
+        response.put("dataInicio", dataInicio);
+        response.put("dataFim", dataFim);
+        response.put("total", turmasDto.size());
+        response.put("dados", turmasDto);
+
+        return ResponseEntity.ok(response);
+    }
+
 
 }

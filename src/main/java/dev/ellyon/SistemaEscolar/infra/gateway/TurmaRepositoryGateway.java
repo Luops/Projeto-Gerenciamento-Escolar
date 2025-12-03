@@ -3,6 +3,7 @@ package dev.ellyon.SistemaEscolar.infra.gateway;
 import dev.ellyon.SistemaEscolar.core.entities.Turma;
 import dev.ellyon.SistemaEscolar.core.gateway.TurmaGateway;
 import dev.ellyon.SistemaEscolar.infra.exceptions.Materia.MateriaNaoEncontradaPeloIdException;
+import dev.ellyon.SistemaEscolar.infra.exceptions.Turma.TurmaNaoEncontradaPeloAnoException;
 import dev.ellyon.SistemaEscolar.infra.exceptions.Turma.TurmaNaoEncontradaPeloIdException;
 import dev.ellyon.SistemaEscolar.infra.exceptions.Turma.TurmaNaoEncontradaPeloNumeroException;
 import dev.ellyon.SistemaEscolar.infra.mapper.TurmaEntityMapper;
@@ -102,5 +103,19 @@ public class TurmaRepositoryGateway implements TurmaGateway {
                 .orElseThrow(() -> new TurmaNaoEncontradaPeloNumeroException(numero));
 
         return turmaEntityMapper.toDomain(turmaEntity);
+    }
+
+    @Override
+    public List<Turma> buscarTurmaPeloAno(String ano) {
+        List<TurmaEntity> turmasEntity = turmaRepository.findByAno(ano);
+        if (turmasEntity.isEmpty()) {
+            throw new TurmaNaoEncontradaPeloAnoException(null);
+        }
+        return turmasEntity.stream().map(turmaEntityMapper::toDomain).toList();
+    }
+
+    @Override
+    public List<Turma> buscarTurmasEntreDatasCriacao(LocalDateTime dataInicio, LocalDateTime dataFim) {
+        return turmaRepository.findByCriadoEmBetween(dataInicio, dataFim).stream().map(turmaEntityMapper::toDomain).toList();
     }
 }
