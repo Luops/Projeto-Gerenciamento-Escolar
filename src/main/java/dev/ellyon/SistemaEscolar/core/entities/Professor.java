@@ -2,17 +2,33 @@ package dev.ellyon.SistemaEscolar.core.entities;
 
 import dev.ellyon.SistemaEscolar.core.enums.MateriaEnum;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Professor extends Entidade {
     private String nome;
     private String sobrenome;
-    private List<MateriaEnum> materias;
-    private Integer totalAlunos;
-    private List<Turma> turmas;
+    private int totalAlunos;
+
+    // Campos opcionais (transientes) que podem ser preenchidos via join
+    private String email;
+    private Long entidadeId;
+
+    public Professor(Long idProfessor, LocalDateTime atualizadoEm, LocalDateTime criadoEm, String nome, String sobrenome, int totalAlunos) {
+        super(idProfessor, atualizadoEm, criadoEm);
+        this.nome = nome;
+        this.sobrenome = sobrenome;
+        this.totalAlunos = totalAlunos;
+    }
+
+    public Professor(String nome, String sobrenome, int totalAlunos) {
+        this.nome = nome;
+        this.sobrenome = sobrenome;
+        this.totalAlunos = totalAlunos;
+    }
 
     public String getNome() {
-        return this.nome;
+        return nome;
     }
 
     public void setNome(String nome) {
@@ -20,38 +36,34 @@ public class Professor extends Entidade {
     }
 
     public String getSobrenome() {
-        return this.sobrenome;
+        return sobrenome;
     }
 
     public void setSobrenome(String sobrenome) {
         this.sobrenome = sobrenome;
     }
 
-    public List<MateriaEnum> getMaterias() {
-        return this.materias;
-    }
-
-    public void setMaterias(List<MateriaEnum> materias) {
-        this.materias = materias;
-    }
-
     public int getTotalAlunos() {
-        return this.totalAlunos;
+        return totalAlunos;
     }
 
     public void setTotalAlunos(int totalAlunos) {
         this.totalAlunos = totalAlunos;
     }
 
-    public List<Turma> getTurmas() {
-        return this.turmas;
+    public String getEmail() {
+        return email;
     }
 
-    public void setTurmas(List<Turma> turmas) {
-        this.turmas = turmas;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    /*
-     * Ajustes: atributo materias, getMaterias e setMaterias estavam como String e não como MateriaEnum - 15/10/2025 Fabrício */
+    public Long getEntidadeId() {
+        return entidadeId;
+    }
 
+    public void setEntidadeId(Long entidadeId) {
+        this.entidadeId = entidadeId;
+    }
 }

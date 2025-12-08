@@ -4,6 +4,9 @@ import dev.ellyon.SistemaEscolar.infra.exceptions.Coordenador.CoordenadorNaoEnco
 import dev.ellyon.SistemaEscolar.infra.exceptions.Coordenador.DuplicateCoordenadorEmailException;
 import dev.ellyon.SistemaEscolar.infra.exceptions.Coordenador.DuplicateCoordenadorIdException;
 import dev.ellyon.SistemaEscolar.infra.exceptions.Materia.MateriaNaoEncontradaPeloIdException;
+import dev.ellyon.SistemaEscolar.infra.exceptions.Professor.DuplicateProfessorEmailException;
+import dev.ellyon.SistemaEscolar.infra.exceptions.Professor.DuplicateProfessorIdException;
+import dev.ellyon.SistemaEscolar.infra.exceptions.Professor.ProfessorNaoEncontradoPeloIdException;
 import dev.ellyon.SistemaEscolar.infra.exceptions.Turma.TurmaNaoEncontradaPeloAnoException;
 import dev.ellyon.SistemaEscolar.infra.exceptions.Turma.TurmaNaoEncontradaPeloIdException;
 import dev.ellyon.SistemaEscolar.infra.exceptions.Turma.TurmaNaoEncontradaPeloNumeroException;
@@ -70,6 +73,30 @@ public class ControllerExceptionsHandler extends RuntimeException{
         Map<String, String> response = new HashMap<>();
         response.put("error", ex.getMessage());
         response.put("message:", "A turma com o ano fornecido não foi encontrada no sistema.");
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DuplicateProfessorIdException.class)
+    public ResponseEntity<Map<String, String>> handleProfessorDuplicateEmailException(DuplicateProfessorEmailException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("error", ex.getMessage());
+        response.put("message:", "Já existe um professor com o email fornecido. Por favor insira outro email.");
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(DuplicateProfessorIdException.class)
+    public ResponseEntity<Map<String, String>> handleProfessorDuplicateIdException(DuplicateProfessorEmailException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("error", ex.getMessage());
+        response.put("message:", "Já existe um professor com o ID gerado. Favor tentar novamente ou contacte o suporte.");
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(ProfessorNaoEncontradoPeloIdException.class)
+    public ResponseEntity<Map<String, String>> handleProfessorNaoEncontradoPeloIdException(ProfessorNaoEncontradoPeloIdException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("error", ex.getMessage());
+        response.put("message:", "O professor com o ID fornecido não foi encontrado no sistema.");
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }

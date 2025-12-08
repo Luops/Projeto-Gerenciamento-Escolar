@@ -1,26 +1,26 @@
 package dev.ellyon.SistemaEscolar.infra.mapper;
 
 import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
+import dev.ellyon.SistemaEscolar.core.entities.Professor;
 import dev.ellyon.SistemaEscolar.infra.dtos.CoordenadorDto;
-import dev.ellyon.SistemaEscolar.infra.persistence.CoordenadorEntity;
+import dev.ellyon.SistemaEscolar.infra.dtos.ProfessorDto;
+import dev.ellyon.SistemaEscolar.infra.persistence.MateriaEntity;
 import dev.ellyon.SistemaEscolar.infra.persistence.UsuarioEntity;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
-public class CoordenadorDtoMapper {
+public class ProfessorDtoMapper {
     // Resposta completa, incluindo dados do usuário (sem senha)
-    public CoordenadorDto toDto(Coordenador coordenador){
-        CoordenadorDto dto = new CoordenadorDto();
-        dto.setId(coordenador.getId());
-        dto.setNome(coordenador.getNome());
-        dto.setSobrenome(coordenador.getSobrenome());
-        dto.setAtualizadoEm(coordenador.getAtualizadoEm());
-        dto.setCriadoEm(coordenador.getCriadoEm());
+    public ProfessorDto toDto(Professor professor){
+        ProfessorDto dto = new ProfessorDto();
+        dto.setIdProfessor(professor.getId());
+        dto.setNome(professor.getNome());
+        dto.setSobrenome(professor.getSobrenome());
+        dto.setAtualizadoEm(professor.getAtualizadoEm());
+        dto.setCriadoEm(professor.getCriadoEm());
         // Pegar dados do coordenador (que já tem email e entidadeId)
-        dto.setEmail(coordenador.getEmail());
-        dto.setEntidadeId(coordenador.getEntidadeId());
+        dto.setEmail(professor.getEmail());
+        dto.setEntidadeId(professor.getEntidadeId());
         return dto;
     }
 

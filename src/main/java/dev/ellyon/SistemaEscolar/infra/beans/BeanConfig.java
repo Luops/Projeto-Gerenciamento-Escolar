@@ -2,9 +2,12 @@ package dev.ellyon.SistemaEscolar.infra.beans;
 
 import dev.ellyon.SistemaEscolar.core.gateway.CoordenadorGateway;
 import dev.ellyon.SistemaEscolar.core.gateway.MateriaGateway;
+import dev.ellyon.SistemaEscolar.core.gateway.ProfessorGateway;
 import dev.ellyon.SistemaEscolar.core.gateway.TurmaGateway;
 import dev.ellyon.SistemaEscolar.core.usecase.CoordenadorUseCases.*;
 import dev.ellyon.SistemaEscolar.core.usecase.MateriaUseCases.*;
+import dev.ellyon.SistemaEscolar.core.usecase.ProfessorUseCases.CriarProfessorUseCase;
+import dev.ellyon.SistemaEscolar.core.usecase.ProfessorUseCases.CriarProfessorUseCaseImpl;
 import dev.ellyon.SistemaEscolar.core.usecase.TurmaUseCases.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +31,11 @@ public class BeanConfig {
     @Bean
     public CriarTurmaUseCase criarTurma(TurmaGateway turmaGateway){
         return new CriarTurmaUseCaseImpl(turmaGateway);
+    }
+
+    // Define o bean para o caso de uso de criar professor
+    @Bean
+    public CriarProfessorUseCase criarProfessor(ProfessorGateway professorGateway){ return new CriarProfessorUseCaseImpl(professorGateway);
     }
 
     /*
