@@ -13,7 +13,6 @@ public class Coordenador extends Entidade{
     private String email;
     private Long entidadeId;
 
-
     public Coordenador(Long id, String nome, LocalDateTime criadoEm, LocalDateTime atualizadoEm, String sobrenome) {
         super(id, criadoEm, atualizadoEm);
         this.nome = nome;

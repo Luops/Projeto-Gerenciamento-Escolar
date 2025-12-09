@@ -3,12 +3,10 @@ package dev.ellyon.SistemaEscolar.infra.gateway;
 import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
 import dev.ellyon.SistemaEscolar.core.enums.RoleEnum;
 import dev.ellyon.SistemaEscolar.core.gateway.CoordenadorGateway;
+import dev.ellyon.SistemaEscolar.core.gateway.ProfessorGateway;
 import dev.ellyon.SistemaEscolar.infra.exceptions.Coordenador.CoordenadorNaoEncontradoPeloIdException;
 import dev.ellyon.SistemaEscolar.infra.mapper.CoordenadorEntityMapper;
-import dev.ellyon.SistemaEscolar.infra.persistence.CoordenadorEntity;
-import dev.ellyon.SistemaEscolar.infra.persistence.CoordenadorRepository;
-import dev.ellyon.SistemaEscolar.infra.persistence.UsuarioEntity;
-import dev.ellyon.SistemaEscolar.infra.persistence.UsuarioRepository;
+import dev.ellyon.SistemaEscolar.infra.persistence.*;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
@@ -16,8 +14,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
-public class ProfessorRepositoryGateway implements CoordenadorGateway {
-    private final CoordenadorRepository coordenadorRepository;
+public class ProfessorRepositoryGateway implements ProfessorGateway {
+    private final ProfessorRepository professorRepository;
     private final UsuarioRepository usuarioRepository;
     private final CoordenadorEntityMapper coordenadorEntityMapper;
 

@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface ProfessorGateway {
     // CRUD - professor
-    Professor criarProfessor(Professor professor, String email, String senha, Long entidadeId, List<Long> idTurma);
+    Professor criarProfessor(Professor professor, String email, String senha, Long entidadeId, List<Long> idTurma, List<Long> idMateria);
     /*Coordenador editarCoordenador(Long id, Coordenador coordenadorAtualizado, String email, String senha);
     void deletarCoordenador(Long id);
     Coordenador buscarCoordenadorPeloId(Long id);

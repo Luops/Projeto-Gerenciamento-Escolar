@@ -1,12 +1,8 @@
 package dev.ellyon.SistemaEscolar.core.usecase.ProfessorUseCases;
 
-import dev.ellyon.SistemaEscolar.core.entities.Coordenador;
 import dev.ellyon.SistemaEscolar.core.entities.Professor;
 import dev.ellyon.SistemaEscolar.core.exceptions.ValidacaoException;
-import dev.ellyon.SistemaEscolar.core.gateway.CoordenadorGateway;
 import dev.ellyon.SistemaEscolar.core.gateway.ProfessorGateway;
-import dev.ellyon.SistemaEscolar.infra.exceptions.Coordenador.DuplicateCoordenadorEmailException;
-import dev.ellyon.SistemaEscolar.infra.exceptions.Coordenador.DuplicateCoordenadorIdException;
 
 import java.util.List;
 
@@ -18,12 +14,12 @@ public class CriarProfessorUseCaseImpl implements CriarProfessorUseCase {
     }
 
     @Override
-    public Professor execute(Professor professor, String email, String senha, Long entidadeId, List<Long> idTurma) {
-        validar(professor, email, senha, entidadeId, idTurma);
-        return professorGateway.criarProfessor(professor, email, senha, entidadeId, idTurma);
+    public Professor execute(Professor professor, String email, String senha, Long entidadeId, List<Long> idTurma, List<Long> idMateria) {
+        validar(professor, email, senha, entidadeId, idTurma, idMateria);
+        return professorGateway.criarProfessor(professor, email, senha, entidadeId, idTurma, idMateria);
     }
 
-    private void validar(Professor professor, String email, String senha, Long entidadeId, List<Long> idTurma){
+    private void validar(Professor professor, String email, String senha, Long entidadeId, List<Long> idTurma, List<Long> idMateria){
         // Validar campos preenchidos
         if(professor.getNome() == null || professor.getNome().isEmpty()) {
             throw new ValidacaoException("O nome do professor é obrigatório.");
@@ -45,6 +41,9 @@ public class CriarProfessorUseCaseImpl implements CriarProfessorUseCase {
         }
         if (idTurma == null || idTurma.isEmpty()){
             throw new ValidacaoException("Problema ao informar as turmas.");
+        }
+        if (idMateria == null || idMateria.isEmpty()){
+            throw new ValidacaoException("Problema ao informar as materias.");
         }
 
         // Validar dados no banco
